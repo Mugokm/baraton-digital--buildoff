@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- EmailJS SDK for direct browser-to-email routing -->
+    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your public key from emailjs.com
+            // Initialized with your EmailJS Public Key
+            emailjs.init("ILNgR4p-cM3ZotT7d");
         })();
     </script>
     <script>
@@ -73,11 +74,11 @@
         <h1 class="text-2xl font-extrabold mb-1">Anonymous Item Recovery</h1>
         <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">Baraton University Security Shield</p>
 
-        <!-- Privacy-Safe Container (No Raw Name Exposed) -->
+        <!-- Privacy-Safe Container (Masked to prevent blackmail) -->
         <div class="bg-black/50 p-5 rounded-2xl text-left mb-6 border border-white/5 space-y-3 text-sm">
             <div class="flex justify-between">
                 <span class="text-slate-400">Target Student ID:</span>
-                <span id="display-id" class="font-bold text-amber-400">smahma2111</span>
+                <span id="display-id" class="font-bold text-amber-400">smugmo2711</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-slate-400">Registered Email:</span>
@@ -104,16 +105,15 @@
     </div>
 
     <script>
-        // Parse parameters from QR URL (e.g., item.html?id=smahma2111&email=smahma2111@ueab.ac.ke)
+        // Parse parameters from QR URL if supplied, otherwise defaults to smugmo2711
         const urlParams = new URLSearchParams(window.location.search);
-        const studentId = urlParams.get('id');
-        const studentEmail = urlParams.get('email') || 'smahma2111@ueab.ac.ke';
+        const studentId = urlParams.get('id') || 'smugmo2711';
+        const studentEmail = urlParams.get('email') || 'smugmo2711@ueab.ac.ke';
         const itemName = urlParams.get('item');
 
-        if (studentId) document.getElementById('display-id').innerText = studentId;
+        if (urlParams.get('id')) document.getElementById('display-id').innerText = studentId;
         if (itemName) document.getElementById('display-item').innerText = itemName;
 
-        // Function to send email securely via EmailJS without revealing finder or exposing owner name
         function sendAnonymousAlert(event) {
             event.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -122,22 +122,21 @@
 
             const messageBody = document.getElementById('finder-message').value;
 
-            // Template parameters passed to EmailJS service
             const templateParams = {
                 to_email: studentEmail,
-                student_id: studentId || 'smahma2111',
+                student_id: studentId,
                 item_name: itemName || 'Valuable Item',
                 finder_message: messageBody
             };
 
-            // Replace with your EmailJS service ID and template ID
+            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your EmailJS dashboard values
             emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
                 .then(function(response) {
-                    alert('Success! An encrypted alert has been securely emailed to ' + studentId + '@ueab.ac.ke.');
+                    alert('Success! An encrypted alert has been securely emailed to ' + studentEmail);
                     document.getElementById('recovery-form').reset();
                     btn.innerText = "Alert Sent Successfully";
                 }, function(error) {
-                    alert('Failed to send alert. Please drop the item at the ISC Lab.');
+                    alert('Alert dispatch failed. Please drop the item at the ISC Main Lab.');
                     btn.innerText = "Try Again";
                     btn.disabled = false;
                 });
@@ -154,3 +153,4 @@
     </script>
 </body>
 </html>
+ 
