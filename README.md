@@ -26,17 +26,4 @@
 * **Privacy-First Anonymous Routing:** Finders scan the tag and contact the owner through a masked web relay—no personal phone numbers or emails are ever exposed.
 * **Instant Rewards & Gamification:** Integrated campus karma system encouraging community return rates.
 
----
 
-##  Quick Start & Deployment
-
-To deploy this project locally or on GitHub Pages (`baraton.github.io`):
-
-```bash
-# Clone the repository
-git clone [https://github.com/baraton-isc/tagvault.git](https://github.com/baraton-isc/tagvault.git)
-
-# Navigate to project directory
-cd tagvault
-
-# Open index.html locally or push to main branch for GitHub Pages
