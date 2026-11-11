@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Recovery // TagVault Baraton</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0a0a0c',
+                        carddark: '#121318',
+                        goldglow: '#f59e0b',
+                        luxurygold: '#d97706',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body, a, button, textarea { cursor: none !important; }
+        .cursor-dot, .cursor-outline {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            transition: width 0.2s, height 0.2s, transform 0.1s;
+        }
+        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.1); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-obsidian text-slate-100 min-h-screen flex items-center justify-center p-6">
+
+    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
+    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
+
+    <div class="max-w-md w-full glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl text-center">
+        <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-amber-500/20 shadow-lg shadow-amber-500/10">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        
+        <h1 class="text-2xl font-extrabold mb-1">TagVault Recovery</h1>
+        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
+
+        <!-- Dynamic Data Container -->
+        <div class="bg-black/50 p-5 rounded-2xl text-left mb-6 border border-white/5 space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span class="text-slate-400">Student ID:</span>
+                <span id="display-id" class="font-bold text-amber-400">BIT/1042/2026</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Owner Name:</span>
+                <span id="display-name" class="font-bold text-white">Alex Kiprop</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Item Tagged:</span>
+                <span id="display-item" class="font-bold text-white">Keys & Dorm Pass</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-slate-400">Status:</span>
+                <span class="text-emerald-400 font-bold">Protected / Active</span>
+            </div>
+        </div>
+
+        <!-- Finder Contact Form -->
+        <form onsubmit="event.preventDefault(); alert('Secure alert sent to student successfully! Thank you for returning the item.');" class="space-y-4">
+            <textarea placeholder="Where did you find this item? Leave a brief message for the owner..." required class="w-full bg-black/60 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:border-amber-500 outline-none h-28 resize-none transition"></textarea>
+            
+            <button type="submit" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm">
+                Send Anonymous Alert to Owner
+            </button>
+        </form>
+    </div>
+
+    <!-- Script to parse student ID and item details from URL parameters -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get('id');
+        const ownerName = urlParams.get('name');
+        const itemName = urlParams.get('item');
+
+        if (studentId) document.getElementById('display-id').innerText = studentId;
+        if (ownerName) document.getElementById('display-name').innerText = ownerName;
+        if (itemName) document.getElementById('display-item').innerText = itemName;
+
+        // Custom Cursor Tracker Script
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
+        });
+    </script>
+</body>
+</html>
