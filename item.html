@@ -97,9 +97,9 @@
             </div>
         </div>
 
-        <!-- Direct Email Action Button -->
-        <a id="action-email-btn" href="mailto:smugmo2711@ueab.ac.ke?subject=Found%20Your%20Lost%20Item%20(TagVault)" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center">
-            <i class="fa-solid fa-paper-plane mr-2"></i> Open Mail App to Contact Student
+        <!-- Direct Gmail Web Action Button -->
+        <a id="action-gmail-btn" href="https://mail.google.com/mail/?view=cm&to=smugmo2711@ueab.ac.ke&su=Found%20Your%20Lost%20Item%20(TagVault)&body=Hello,%20I%20found%20your%20lost%20item%20registered%20under%20TagVault%20Baraton." target="_blank" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center">
+            <i class="fa-brands fa-google mr-2 text-base"></i> Open Gmail to Contact Student
         </a>
     </div>
 
@@ -108,18 +108,21 @@
         const urlParams = new URLSearchParams(window.location.search);
         const studentId = urlParams.get('id') || 'smugmo2711';
         const studentEmail = urlParams.get('email') || `${studentId}@ueab.ac.ke`;
-        const itemName = urlParams.get('item');
+        const itemName = urlParams.get('item') || 'Valuable Item';
 
         // Dynamically update fields
         document.getElementById('display-id').innerText = studentId;
         document.getElementById('display-email').innerText = studentEmail;
-        document.getElementById('action-email-btn').href = `mailto:${studentEmail}?subject=Found%20Your%20Lost%20Item%20(TagVault)`;
+        
+        // Dynamically update Gmail web link with custom item details
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${studentEmail}&su=Found%20Your%20Lost%20Item%20(${itemName})&body=Hello,%20I%20found%20your%20lost%20${encodeURIComponent(itemName)}%20registered%20under%20TagVault%20Baraton.`;
+        document.getElementById('action-gmail-btn').href = gmailUrl;
 
-        if (itemName) {
-            document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${itemName}`;
+        if (urlParams.get('item')) {
+            document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${urlParams.get('item')}`;
         }
 
-        // Copy email function for foolproof testing
+        // Copy email fallback function
         function copyEmail() {
             navigator.clipboard.writeText(studentEmail);
             alert('Email address copied to clipboard: ' + studentEmail);
