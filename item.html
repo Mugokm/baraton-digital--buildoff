@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Recovery // TagVault Baraton</title>
+    <title>Secure Item Recovery // TagVault Baraton</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- EmailJS SDK for direct browser-to-email routing -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your public key from emailjs.com
+        })();
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -60,52 +67,81 @@
 
     <div class="max-w-md w-full glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl text-center">
         <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-amber-500/20 shadow-lg shadow-amber-500/10">
-            <i class="fa-solid fa-shield-halved"></i>
+            <i class="fa-solid fa-user-secret"></i>
         </div>
         
-        <h1 class="text-2xl font-extrabold mb-1">TagVault Recovery</h1>
-        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
+        <h1 class="text-2xl font-extrabold mb-1">Anonymous Item Recovery</h1>
+        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">Baraton University Security Shield</p>
 
-        <!-- Dynamic Data Container -->
+        <!-- Privacy-Safe Container (No Raw Name Exposed) -->
         <div class="bg-black/50 p-5 rounded-2xl text-left mb-6 border border-white/5 space-y-3 text-sm">
             <div class="flex justify-between">
-                <span class="text-slate-400">Student ID:</span>
-                <span id="display-id" class="font-bold text-amber-400">BIT/1042/2026</span>
+                <span class="text-slate-400">Target Student ID:</span>
+                <span id="display-id" class="font-bold text-amber-400">smahma2111</span>
             </div>
             <div class="flex justify-between">
-                <span class="text-slate-400">Owner Name:</span>
-                <span id="display-name" class="font-bold text-white">Alex Kiprop</span>
+                <span class="text-slate-400">Registered Email:</span>
+                <span class="font-bold text-slate-300">s*****@ueab.ac.ke</span>
             </div>
             <div class="flex justify-between">
-                <span class="text-slate-400">Item Tagged:</span>
-                <span id="display-item" class="font-bold text-white">Keys & Dorm Pass</span>
+                <span class="text-slate-400">Item Category:</span>
+                <span id="display-item" class="font-bold text-white">Campus Keys / Valuables</span>
             </div>
             <div class="flex justify-between">
-                <span class="text-slate-400">Status:</span>
-                <span class="text-emerald-400 font-bold">Protected / Active</span>
+                <span class="text-slate-400">Privacy Status:</span>
+                <span class="text-emerald-400 font-bold"><i class="fa-solid fa-shield-check mr-1"></i> Masked & Secure</span>
             </div>
         </div>
 
-        <!-- Finder Contact Form -->
-        <form onsubmit="event.preventDefault(); alert('Secure alert sent to student successfully! Thank you for returning the item.');" class="space-y-4">
-            <textarea placeholder="Where did you find this item? Leave a brief message for the owner..." required class="w-full bg-black/60 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:border-amber-500 outline-none h-28 resize-none transition"></textarea>
+        <!-- Anonymous Finder Form -->
+        <form id="recovery-form" onsubmit="sendAnonymousAlert(event)" class="space-y-4">
+            <textarea id="finder-message" placeholder="Where did you find this item? (e.g., Left at the Main Library front desk)..." required class="w-full bg-black/60 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:border-amber-500 outline-none h-28 resize-none transition"></textarea>
             
-            <button type="submit" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm">
-                Send Anonymous Alert to Owner
+            <button type="submit" id="submit-btn" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm">
+                Dispatch Secure Alert to Owner
             </button>
         </form>
     </div>
 
-    <!-- Script to parse student ID and item details from URL parameters -->
     <script>
+        // Parse parameters from QR URL (e.g., item.html?id=smahma2111&email=smahma2111@ueab.ac.ke)
         const urlParams = new URLSearchParams(window.location.search);
         const studentId = urlParams.get('id');
-        const ownerName = urlParams.get('name');
+        const studentEmail = urlParams.get('email') || 'smahma2111@ueab.ac.ke';
         const itemName = urlParams.get('item');
 
         if (studentId) document.getElementById('display-id').innerText = studentId;
-        if (ownerName) document.getElementById('display-name').innerText = ownerName;
         if (itemName) document.getElementById('display-item').innerText = itemName;
+
+        // Function to send email securely via EmailJS without revealing finder or exposing owner name
+        function sendAnonymousAlert(event) {
+            event.preventDefault();
+            const btn = document.getElementById('submit-btn');
+            btn.innerText = "Dispatching Encrypted Alert...";
+            btn.disabled = true;
+
+            const messageBody = document.getElementById('finder-message').value;
+
+            // Template parameters passed to EmailJS service
+            const templateParams = {
+                to_email: studentEmail,
+                student_id: studentId || 'smahma2111',
+                item_name: itemName || 'Valuable Item',
+                finder_message: messageBody
+            };
+
+            // Replace with your EmailJS service ID and template ID
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                .then(function(response) {
+                    alert('Success! An encrypted alert has been securely emailed to ' + studentId + '@ueab.ac.ke.');
+                    document.getElementById('recovery-form').reset();
+                    btn.innerText = "Alert Sent Successfully";
+                }, function(error) {
+                    alert('Failed to send alert. Please drop the item at the ISC Lab.');
+                    btn.innerText = "Try Again";
+                    btn.disabled = false;
+                });
+        }
 
         // Custom Cursor Tracker Script
         const cursorDot = document.querySelector('[data-cursor-dot]');
