@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Your Tags  TagVault Baraton</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0a0a0c',
+                        carddark: '#121318',
+                        goldglow: '#f59e0b',
+                        luxurygold: '#d97706',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body, a, button, input, select, textarea { cursor: none !important; }
+        .cursor-dot, .cursor-outline {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            transition: width 0.2s, height 0.2s, transform 0.1s;
+        }
+        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.1); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .perspective-container { perspective: 1000px; }
+        .card-3d {
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s, box-shadow 0.4s;
+            transform-style: preserve-3d;
+        }
+        .card-3d:hover {
+            transform: translateY(-5px) rotateX(2deg) rotateY(2deg);
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-obsidian text-slate-100 selection:bg-goldglow selection:text-black">
+
+    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
+    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-card border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center">
+        <a href="index.html" class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div>
+                <span class="text-lg font-bold tracking-tight gold-gradient-text">TagVault</span>
+                <span class="block text-[10px] text-slate-400 uppercase tracking-widest">Baraton University ISC</span>
+            </div>
+        </a>
+        <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+            <a href="index.html" class="hover:text-goldglow transition">Home</a>
+            <a href="explore.html" class="hover:text-goldglow transition">Technology</a>
+            <a href="claim.html" class="text-goldglow font-bold transition">Claim Tags</a>
+        </div>
+        <div>
+            <a href="index.html#pricing" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-black font-bold text-sm shadow-lg shadow-amber-500/20 hover:scale-105 transition duration-300">
+                View Pricing
+            </a>
+        </div>
+    </nav>
+
+    <!-- Claim Container -->
+    <section class="pt-36 pb-20 px-6 md:px-12 max-w-4xl mx-auto perspective-container">
+        <div class="glass-card card-3d p-8 md:p-12 rounded-3xl border border-amber-500/20 relative">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full glass-card text-xs font-semibold text-amber-400 mb-4 border border-amber-500/20">
+                    <i class="fa-solid fa-tags"></i>
+                    <span>Official Baraton Student Bundle Dispatch</span>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-3">Claim Your 5-Tag Pack</h1>
+                <p class="text-slate-400 text-sm md:text-base">Get 5 high-durability NFC/QR stickers for <span class="text-amber-400 font-bold">KSh 50</span> with 4 years of total cloud data retention included.</p>
+            </div>
+
+            <!-- Form -->
+            <form onsubmit="event.preventDefault(); alert('Order placed! Collect your tag bundle at the ISC Main Lab.');" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Full Student Name</label>
+                        <input type="text" required placeholder="e.g. Alex Kiprop" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:border-amber-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Baraton Student ID</label>
+                        <input type="text" required placeholder="e.g. BIT/1042/2026" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:border-amber-500 outline-none transition">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">M-PESA Phone Number</label>
+                        <input type="tel" required placeholder="e.g. 0712345678" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:border-amber-500 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Campus Pickup Location</label>
+                        <select class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:border-amber-500 outline-none transition">
+                            <option value="isc-lab">ISC Main Lab (Presentation Hall)[cite: 1]</option>
+                            <option value="library">Main University Library</option>
+                            <option value="security">Main Gate Security Desk</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Order Summary Box -->
+                <div class="bg-black/40 p-6 rounded-2xl border border-white/5 space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-400">5x NFC/QR Tags Bundle</span>
+                        <span class="font-bold">KSh 50</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-slate-400">4-Year Cloud Retention</span>
+                        <span class="text-emerald-400 font-bold">FREE</span>
+                    </div>
+                    <hr class="border-white/10 my-2">
+                    <div class="flex justify-between text-base font-bold">
+                        <span>Total Due</span>
+                        <span class="gold-gradient-text text-xl">KSh 50</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 rounded-xl bg-amber-500 text-black font-extrabold text-base shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition">
+                    Pay KSh 50 via M-PESA & Reserve Tags
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-12 px-6 text-center text-slate-500 text-sm">
+        <p>© 2026 ISC Digital Build-Off Hackathon Entry[cite: 1]. Baraton University.</p>
+    </footer>
+
+    <script>
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
+        });
+    </script>
+</body>
+</html>
