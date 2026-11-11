@@ -3,21 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Item Recovery // TagVault Baraton</title>
+    <title>Item Verification // TagVault Baraton</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function() {
-            // Initialized with your EmailJS Public Key
-            emailjs.init("ILNgR4p-cM3ZotT7d");
-        })();
-    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -36,7 +28,7 @@
         }
     </script>
     <style>
-        body, a, button, textarea { cursor: none !important; }
+        body, a, button { cursor: none !important; }
         .cursor-dot, .cursor-outline {
             pointer-events: none;
             position: fixed;
@@ -63,83 +55,66 @@
 </head>
 <body class="bg-obsidian text-slate-100 min-h-screen flex items-center justify-center p-6">
 
+    <!-- Custom Cursor Tracker -->
     <div class="cursor-dot hidden md:block" data-cursor-dot></div>
     <div class="cursor-outline hidden md:block" data-cursor-outline></div>
 
     <div class="max-w-md w-full glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl text-center">
+        <!-- Shield Icon -->
         <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-amber-500/20 shadow-lg shadow-amber-500/10">
-            <i class="fa-solid fa-user-secret"></i>
+            <i class="fa-solid fa-shield-halved"></i>
         </div>
         
-        <h1 class="text-2xl font-extrabold mb-1">Anonymous Item Recovery</h1>
-        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">Baraton University Security Shield</p>
+        <h1 class="text-2xl font-extrabold mb-1">TagVault Ownership</h1>
+        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
 
-        <!-- Privacy-Safe Container (Masked to prevent blackmail) -->
-        <div class="bg-black/50 p-5 rounded-2xl text-left mb-6 border border-white/5 space-y-3 text-sm">
-            <div class="flex justify-between">
-                <span class="text-slate-400">Target Student ID:</span>
-                <span id="display-id" class="font-bold text-amber-400">smugmo2711</span>
+        <!-- Item & Owner Display Container -->
+        <div class="bg-black/50 p-6 rounded-2xl text-left border border-white/5 space-y-4 text-sm mb-6">
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Item Category</span>
+                <span id="display-item" class="text-base font-bold text-white flex items-center">
+                    <i class="fa-solid fa-box text-amber-400 mr-2"></i> Campus Keys / Valuables
+                </span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-slate-400">Registered Email:</span>
-                <span class="font-bold text-slate-300">s*****@ueab.ac.ke</span>
+
+            <hr class="border-white/5 my-2">
+
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Student Owner ID</span>
+                <span id="display-id" class="text-base font-bold text-amber-400">smugmo2711</span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-slate-400">Item Category:</span>
-                <span id="display-item" class="font-bold text-white">Campus Keys / Valuables</span>
-            </div>
-            <div class="flex justify-between">
-                <span class="text-slate-400">Privacy Status:</span>
-                <span class="text-emerald-400 font-bold"><i class="fa-solid fa-shield-check mr-1"></i> Masked & Secure</span>
+
+            <hr class="border-white/5 my-2">
+
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Contact Email</span>
+                <a id="display-email-link" href="mailto:smugmo2711@ueab.ac.ke" class="text-base font-bold text-amber-400 hover:underline break-all flex items-center">
+                    <i class="fa-solid fa-envelope mr-2"></i> <span id="display-email">smugmo2711@ueab.ac.ke</span>
+                </a>
             </div>
         </div>
 
-        <!-- Anonymous Finder Form -->
-        <form id="recovery-form" onsubmit="sendAnonymousAlert(event)" class="space-y-4">
-            <textarea id="finder-message" placeholder="Where did you find this item? (e.g., Left at the Main Library front desk)..." required class="w-full bg-black/60 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:border-amber-500 outline-none h-28 resize-none transition"></textarea>
-            
-            <button type="submit" id="submit-btn" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm">
-                Dispatch Secure Alert to Owner
-            </button>
-        </form>
+        <!-- Direct Email Action Button -->
+        <a id="action-email-btn" href="mailto:smugmo2711@ueab.ac.ke?subject=Found%20Your%20Lost%20Item%20(TagVault)" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center">
+            <i class="fa-solid fa-paper-plane mr-2"></i> Email Student Directly
+        </a>
     </div>
 
     <script>
-        // Parse parameters from QR URL if supplied, otherwise defaults to smugmo2711
+        // Parse parameters from QR URL if supplied (e.g. item.html?id=smugmo2711&item=Scientific%20Calculator)
         const urlParams = new URLSearchParams(window.location.search);
         const studentId = urlParams.get('id') || 'smugmo2711';
-        const studentEmail = urlParams.get('email') || 'smugmo2711@ueab.ac.ke';
+        const studentEmail = urlParams.get('email') || `${studentId}@ueab.ac.ke`;
         const itemName = urlParams.get('item');
 
-        if (urlParams.get('id')) document.getElementById('display-id').innerText = studentId;
-        if (itemName) document.getElementById('display-item').innerText = itemName;
+        // Dynamically update fields
+        document.getElementById('display-id').innerText = studentId;
+        document.getElementById('display-email').innerText = studentEmail;
+        document.getElementById('display-email-link').href = `mailto:${studentEmail}`;
+        document.getElementById('action-email-btn').href = `mailto:${studentEmail}?subject=Found%20Your%20Lost%20Item%20(TagVault)`;
 
-        function sendAnonymousAlert(event) {
-            event.preventDefault();
-            const btn = document.getElementById('submit-btn');
-            btn.innerText = "Dispatching Encrypted Alert...";
-            btn.disabled = true;
-
-            const messageBody = document.getElementById('finder-message').value;
-
-            const templateParams = {
-                to_email: studentEmail,
-                student_id: studentId,
-                item_name: itemName || 'Valuable Item',
-                finder_message: messageBody
-            };
-
-            // Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your EmailJS dashboard values
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-                .then(function(response) {
-                    alert('Success! An encrypted alert has been securely emailed to ' + studentEmail);
-                    document.getElementById('recovery-form').reset();
-                    btn.innerText = "Alert Sent Successfully";
-                }, function(error) {
-                    alert('Alert dispatch failed. Please drop the item at the ISC Main Lab.');
-                    btn.innerText = "Try Again";
-                    btn.disabled = false;
-                });
+        if (itemName) {
+            document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${itemName}`;
         }
 
         // Custom Cursor Tracker Script
