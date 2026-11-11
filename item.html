@@ -46,11 +46,6 @@
         }
         body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.1); }
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
     </style>
 </head>
 <body class="bg-obsidian text-slate-100 min-h-screen flex items-center justify-center p-6">
@@ -68,12 +63,12 @@
         <h1 class="text-2xl font-extrabold mb-1">TagVault Ownership</h1>
         <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
 
-        <!-- Item & Owner Display Container -->
+        <!-- Dynamic Item & Owner Display Container -->
         <div class="bg-black/50 p-6 rounded-2xl text-left border border-white/5 space-y-4 text-sm mb-6">
             <div>
                 <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Item Category</span>
                 <span id="display-item" class="text-base font-bold text-white flex items-center">
-                    <i class="fa-solid fa-box text-amber-400 mr-2"></i> Campus Keys / Valuables
+                    <i class="fa-solid fa-box text-amber-400 mr-2"></i> Loading Item...
                 </span>
             </div>
 
@@ -81,7 +76,7 @@
 
             <div>
                 <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Student Owner ID</span>
-                <span id="display-id" class="text-base font-bold text-amber-400">skibon2711</span>
+                <span id="display-id" class="text-base font-bold text-amber-400">Loading ID...</span>
             </div>
 
             <hr class="border-white/5 my-2">
@@ -89,7 +84,7 @@
             <div>
                 <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Verified School Email</span>
                 <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span id="display-email" class="font-bold text-slate-300 text-sm">skibon2711@ueab.ac.ke</span>
+                    <span id="display-email" class="font-bold text-slate-300 text-sm">Loading Email...</span>
                     <button onclick="copyEmail()" class="px-3 py-1.5 bg-amber-500/20 text-amber-400 rounded-lg text-xs font-bold hover:bg-amber-500 hover:text-black transition">
                         <i class="fa-solid fa-copy mr-1"></i> Copy
                     </button>
@@ -104,31 +99,31 @@
     </div>
 
     <script>
-        // Parse parameters from QR URL (e.g., item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys)
+        // 1. Parse parameters from the scanned QR code URL
         const urlParams = new URLSearchParams(window.location.search);
         
-        // Grab email passed in URL, or default back to skibon2711
-        const fullEmail = urlParams.get('email') || 'skibon2711@ueab.ac.ke';
+        // Grab specific email, fallback to a test student if opened directly without query strings
+        const targetEmail = urlParams.get('email') || 'skibon2711@ueab.ac.ke';
         
-        // Automatically extract the student ID prefix from the email (e.g. skibon2711)
-        const extractedId = fullEmail.split('@')[0];
+        // Extract the unique student ID from before the '@' symbol (e.g. skibon2711)
+        const studentId = targetEmail.split('@')[0];
         
-        // Grab item passed in URL, or default to general valuables
-        const itemName = urlParams.get('item') || 'Campus Keys / Valuables';
+        // Grab specific item, fallback if missing
+        const itemName = urlParams.get('item') || 'Campus Valuables';
 
-        // Dynamically inject values into HTML elements
-        document.getElementById('display-id').innerText = extractedId;
-        document.getElementById('display-email').innerText = fullEmail;
+        // 2. Inject specific student and item data into the page elements
+        document.getElementById('display-id').innerText = studentId;
+        document.getElementById('display-email').innerText = targetEmail;
         document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${itemName}`;
 
-        // Build direct Gmail compose link so scanning a QR code opens Gmail with prefilled recipient and item
-        const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${fullEmail}&su=Found%20Your%20Lost%20Item%20(${encodeURIComponent(itemName)})&body=Hello,%20I%20found%20your%20lost%20${encodeURIComponent(itemName)}%20registered%20under%20TagVault%20Baraton.`;
-        document.getElementById('action-gmail-btn').href = gmailUrl;
+        // 3. Build dynamic Gmail compose web link targeting this exact student
+        const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&to=${targetEmail}&su=Found%20Your%20Lost%20Item%20(${encodeURIComponent(itemName)})&body=Hello,%20I%20found%20your%20lost%20${encodeURIComponent(itemName)}%20registered%20under%20TagVault%20Baraton.`;
+        document.getElementById('action-gmail-btn').href = gmailComposeUrl;
 
-        // Copy Email fallback function
+        // 4. Copy Email fallback function
         function copyEmail() {
-            navigator.clipboard.writeText(fullEmail);
-            alert('Student email copied to clipboard: ' + fullEmail);
+            navigator.clipboard.writeText(targetEmail);
+            alert('Student email copied to clipboard: ' + targetEmail);
         }
 
         // Custom Cursor Tracker Script
