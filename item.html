@@ -1,124 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bulk QR Code Sheet // TagVault Baraton</title>
+    <title>Item Verification // TagVault Baraton</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- QRCode.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0a0a0c',
+                        carddark: '#121318',
+                        goldglow: '#f59e0b',
+                        luxurygold: '#d97706',
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-card { background: rgba(18, 19, 24, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(245, 158, 11, 0.2); }
+        body, a, button { cursor: none !important; }
+        .cursor-dot, .cursor-outline {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
+        .cursor-outline {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            transition: width 0.2s, height 0.2s, transform 0.1s;
+        }
+        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.1); }
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
-<body class="p-8">
+<body class="bg-obsidian text-slate-100 min-h-screen flex items-center justify-center p-6">
 
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-extrabold text-amber-400 mb-2"><i class="fa-solid fa-qrcode mr-3"></i>TagVault Batch QR Sheet (50 Students)</h1>
-            <p class="text-slate-400 text-sm">University of Eastern Africa, Baraton — ISC Hackathon 2026 Test Suite</p>
-            <button onclick="window.print()" class="mt-4 px-6 py-2.5 bg-amber-500 text-black font-bold rounded-xl hover:bg-amber-400 transition text-sm">
-                <i class="fa-solid fa-print mr-2"></i> Print / Save as PDF Sheet
-            </button>
+    <!-- Custom Cursor Tracker -->
+    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
+    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
+
+    <div class="max-w-md w-full glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl text-center">
+        <!-- Shield Icon -->
+        <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-amber-500/20 shadow-lg shadow-amber-500/10">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        
+        <h1 class="text-2xl font-extrabold mb-1">TagVault Ownership</h1>
+        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
+
+        <!-- Item & Owner Display Container -->
+        <div class="bg-black/50 p-6 rounded-2xl text-left border border-white/5 space-y-4 text-sm mb-6">
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Item Category</span>
+                <span id="display-item" class="text-base font-bold text-white flex items-center">
+                    <i class="fa-solid fa-box text-amber-400 mr-2"></i> Campus Keys / Valuables
+                </span>
+            </div>
+
+            <hr class="border-white/5 my-2">
+
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Student Owner ID</span>
+                <span id="display-id" class="text-base font-bold text-amber-400">skibon2711</span>
+            </div>
+
+            <hr class="border-white/5 my-2">
+
+            <div>
+                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Verified School Email</span>
+                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
+                    <span id="display-email" class="font-bold text-slate-300 text-sm">skibon2711@ueab.ac.ke</span>
+                    <button onclick="copyEmail()" class="px-3 py-1.5 bg-amber-500/20 text-amber-400 rounded-lg text-xs font-bold hover:bg-amber-500 hover:text-black transition">
+                        <i class="fa-solid fa-copy mr-1"></i> Copy
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Grid Container where all 50 QR codes will be injected -->
-        <div id="qr-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- QR cards injected via JavaScript -->
-        </div>
+        <!-- Direct Gmail Web Action Button -->
+        <a id="action-gmail-btn" href="#" target="_blank" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center">
+            <i class="fa-brands fa-google mr-2 text-base"></i> Open Gmail to Contact Student
+        </a>
     </div>
 
     <script>
-        // Array of your 50 student emails and sample items
-        const students = [
-            { email: "skibon2711@ueab.ac.ke", item: "Dorm Keys" },
-            { email: "srotic2711@ueab.ac.ke", item: "Laptop" },
-            { email: "schepn2711@ueab.ac.ke", item: "Student ID Card" },
-            { email: "skembo2711@ueab.ac.ke", item: "Scientific Calculator" },
-            { email: "smugok2711@ueab.ac.ke", item: "Power Bank" },
-            { email: "skorir2711@ueab.ac.ke", item: "Earphones" },
-            { email: "skplag2711@ueab.ac.ke", item: "Flash Disk" },
-            { email: "scheru2711@ueab.ac.ke", item: "Notebook" },
-            { email: "stowet2711@ueab.ac.ke", item: "Tumbler" },
-            { email: "sbiwot2711@ueab.ac.ke", item: "Room Keys" },
-            { email: "skinyu2711@ueab.ac.ke", item: "Library Book" },
-            { email: "smaina2711@ueab.ac.ke", item: "Wallet" },
-            { email: "smwand2711@ueab.ac.ke", item: "Phone Charger" },
-            { email: "sotien2711@ueab.ac.ke", item: "AirPods" },
-            { email: "sawino2711@ueab.ac.ke", item: "Jacket" },
-            { email: "somond2711@ueab.ac.ke", item: "Backpack" },
-            { email: "sakiny2711@ueab.ac.ke", item: "Calculator" },
-            { email: "sanyan2711@ueab.ac.ke", item: "Water Bottle" },
-            { email: "smutua2711@ueab.ac.ke", item: "Lab Coat" },
-            { email: "smusyo2711@ueab.ac.ke", item: "Extension Cord" },
-            { email: "skalon2711@ueab.ac.ke", item: "Flash Drive" },
-            { email: "smulwa2711@ueab.ac.ke", item: "Dorm Keys" },
-            { email: "swambu2711@ueab.ac.ke", item: "Headphones" },
-            { email: "smwangi2711@ueab.ac.ke", item: "Laptop Bag" },
-            { email: "snjeri2711@ueab.ac.ke", item: "Tumbler" },
-            { email: "skaran2711@ueab.ac.ke", item: "Notebook" },
-            { email: "skamau2711@ueab.ac.ke", item: "Keys" },
-            { email: "smachi2711@ueab.ac.ke", item: "Wallet" },
-            { email: "snyamb2711@ueab.ac.ke", item: "Student ID" },
-            { email: "smokua2711@ueab.ac.ke", item: "Phone" },
-            { email: "sombat2711@ueab.ac.ke", item: "Jacket" },
-            { email: "snyabu2711@ueab.ac.ke", item: "Backpack" },
-            { email: "smagus2711@ueab.ac.ke", item: "Lab Manual" },
-            { email: "sgesar2711@ueab.ac.ke", item: "Scientific Calculator" },
-            { email: "skeros2711@ueab.ac.ke", item: "Room Keys" },
-            { email: "snyand2711@ueab.ac.ke", item: "Umbrella" },
-            { email: "sokoth2711@ueab.ac.ke", item: "Power Bank" },
-            { email: "sadhiam2711@ueab.ac.ke", item: "Flash Disk" },
-            { email: "soloch2711@ueab.ac.ke", item: "Headphones" },
-            { email: "saumah2711@ueab.ac.ke", item: "Notebook" },
-            { email: "sodhiam2711@ueab.ac.ke", item: "Water Bottle" },
-            { email: "scherop2711@ueab.ac.ke", item: "Dorm Keys" },
-            { email: "sjelag2711@ueab.ac.ke", item: "ID Card" },
-            { email: "sjepko2711@ueab.ac.ke", item: "Laptop" },
-            { email: "skibet2711@ueab.ac.ke", item: "Earphones" },
-            { email: "skipko2711@ueab.ac.ke", item: "Calculator" },
-            { email: "skipto2711@ueab.ac.ke", item: "Wallet" },
-            { email: "skembo2711@ueab.ac.ke", item: "Keys" },
-            { email: "sjegon2711@ueab.ac.ke", item: "Backpack" },
-            { email: "slagan2711@ueab.ac.ke", item: "Tumbler" }
-        ];
+        // Parse parameters from QR URL (e.g., item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys)
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Grab email passed in URL, or default back to skibon2711
+        const fullEmail = urlParams.get('email') || 'skibon2711@ueab.ac.ke';
+        
+        // Automatically extract the student ID prefix from the email (e.g. skibon2711)
+        const extractedId = fullEmail.split('@')[0];
+        
+        // Grab item passed in URL, or default to general valuables
+        const itemName = urlParams.get('item') || 'Campus Keys / Valuables';
 
-        const grid = document.getElementById('qr-grid');
+        // Dynamically inject values into HTML elements
+        document.getElementById('display-id').innerText = extractedId;
+        document.getElementById('display-email').innerText = fullEmail;
+        document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${itemName}`;
 
-        // Loop through each student and generate their card + QR code
-        students.forEach((student, index) => {
-            const studentId = student.email.split('@')[0];
-            
-            // Construct the exact target URL pointing to your item.html
-            const targetUrl = `https://mugokm.github.io/baraton-digital--buildoff/item.html?email=${student.email}&item=${encodeURIComponent(student.item)}`;
+        // Build direct Gmail compose link so scanning a QR code opens Gmail with prefilled recipient and item
+        const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${fullEmail}&su=Found%20Your%20Lost%20Item%20(${encodeURIComponent(itemName)})&body=Hello,%20I%20found%20your%20lost%20${encodeURIComponent(itemName)}%20registered%20under%20TagVault%20Baraton.`;
+        document.getElementById('action-gmail-btn').href = gmailUrl;
 
-            // Create card HTML
-            const card = document.createElement('div');
-            card.className = "glass-card p-5 rounded-2xl text-center flex flex-col items-center justify-between shadow-xl";
-            card.innerHTML = `
-                <div class="mb-3 w-full">
-                    <span class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full">Tag #${index + 1}</span>
-                    <h3 class="text-sm font-extrabold text-white mt-2">${studentId}</h3>
-                    <p class="text-xs text-slate-400">${student.item}</p>
-                </div>
-                <div id="qrcode-${index}" class="bg-white p-3 rounded-xl my-2 inline-block"></div>
-                <p class="text-[10px] text-slate-500 truncate w-full mt-2">${student.email}</p>
-            `;
-            grid.appendChild(card);
+        // Copy Email fallback function
+        function copyEmail() {
+            navigator.clipboard.writeText(fullEmail);
+            alert('Student email copied to clipboard: ' + fullEmail);
+        }
 
-            // Render QR Code inside the card
-            new QRCode(document.getElementById(`qrcode-${index}`), {
-                text: targetUrl,
-                width: 128,
-                height: 128,
-                colorDark: "#0a0a0c",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+        // Custom Cursor Tracker Script
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
         });
     </script>
 </body>
