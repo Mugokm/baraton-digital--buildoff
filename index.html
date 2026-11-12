@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TagVault  Baraton Lost & Found</title>
+    <title>TagVault // Campus Asset Recovery & Protection</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -20,235 +20,186 @@
                         goldglow: '#f59e0b',
                         luxurygold: '#d97706',
                     },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        /* Hide Default System Cursor Everywhere */
-        body, a, button, input {
-            cursor: none !important;
-        }
-
-        /* Custom Luxury Cursor */
+        body, a, button { cursor: none !important; }
         .cursor-dot, .cursor-outline {
             pointer-events: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             transform: translate(-50%, -50%);
             border-radius: 50%;
             z-index: 9999;
             transition: opacity 0.3s ease;
         }
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #f59e0b;
-        }
+        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
         .cursor-outline {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border: 1px solid rgba(245, 158, 11, 0.5);
             transition: width 0.2s, height 0.2s, transform 0.1s;
         }
-
-        body {
-            background-color: #0a0a0c;
-            color: #f3f4f6;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .glass-card {
-            background: rgba(18, 19, 24, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 215, 0, 0.1);
-        }
-
+        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(18, 19, 24, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.12); }
         .gold-gradient-text {
             background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        /* 3D Card Flipping Effect Container */
-        .perspective-container {
-            perspective: 1000px;
+        
+        /* Futuristic macOS Dock Styles */
+        .mac-dock {
+            background: rgba(18, 19, 24, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.15);
         }
-        .card-3d {
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s, box-shadow 0.4s;
-            transform-style: preserve-3d;
+        .dock-item {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
-        .card-3d:hover {
-            transform: translateY(-10px) rotateX(4deg) rotateY(6deg);
-            border-color: rgba(245, 158, 11, 0.4);
-            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.2);
+        .dock-item:hover {
+            transform: translateY(-12px) scale(1.25);
+        }
+        /* Tooltip */
+        .dock-item .tooltip {
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            padding: 4px 10px;
+            background: rgba(10, 10, 12, 0.95);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f3f4f6;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .dock-item:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
-<body class="bg-obsidian text-slate-100 selection:bg-goldglow selection:text-black">
+<body class="bg-obsidian text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
-    <!-- Custom Cursor Elements -->
+    <!-- Custom Cursor Tracker -->
     <div class="cursor-dot hidden md:block" data-cursor-dot></div>
     <div class="cursor-outline hidden md:block" data-cursor-outline></div>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass-card border-b border-white/5 py-4 px-6 md:px-12 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-black font-extrabold text-xl shadow-lg shadow-amber-500/20">
-                <i class="fa-solid fa-shield-halved"></i>
-            </div>
-            <div>
-                <span class="text-lg font-bold tracking-tight gold-gradient-text">TagVault</span>
-                <span class="block text-[10px] text-slate-400 uppercase tracking-widest">Baraton University ISC</span>
-            </div>
-        </div>
-        <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-            <a href="item.html" class="hover:text-goldglow transition">Try out now</a>
-            <a href="explore.html" class="hover:text-goldglow transition">How It Works</a>
-            <a href="claim.html" class="hover:text-goldglow transition">Pricing</a>
-            
-        </div>
-        <div>
-            <a href="claim.html" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-black font-bold text-sm shadow-lg shadow-amber-500/20 hover:scale-105 transition duration-300">
-                Get 5 Tags for KSh 50
-            </a>
-        </div>
-    </nav>
-
     <!-- Hero Section -->
-    <header class="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center text-center">
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card text-xs font-semibold text-amber-400 mb-6 border border-amber-500/20">
-            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-            <span>Welcome </span>
+    <header class="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center relative z-10">
+        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-wide uppercase mb-6 shadow-lg shadow-amber-500/10">
+            <i class="fa-solid fa-shield-halved animate-pulse"></i>
+            <span>ISC Digital Build-Off Hackathon 2026 &bull; Baraton</span>
         </div>
 
-        <h1 class="text-4xl md:text-7xl font-extrabold tracking-tight max-w-4xl leading-tight mb-8">
-            Never Lose Your Valuables at <span class="gold-gradient-text">Baraton University</span> Again.
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
+            Privacy-First Asset Recovery for <span class="gold-gradient-text">Baraton Students</span>
         </h1>
 
-        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mb-10 font-normal">
-            Secure your keys, books, and easily misplaces items with high-durability NFC stickers and dynamic QR codes. Instant anonymous return, 4-year guarantee
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-10">
+            Protect your keys, laptops, and student IDs with zero-app QR stickers. Scan to instantly connect with owners via direct Gmail web intents without ever exposing phone numbers.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
-            <a href="claim.html" class="px-8 py-4 rounded-xl bg-amber-500 text-black font-extrabold text-base shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition transform hover:-translate-y-0.5">
-                Claim Your Tag Bundle <i class="fa-solid fa-arrow-right ml-2"></i>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="claim.html" class="w-full sm:w-auto px-8 py-4 bg-amber-500 hover:bg-amber-400 text-black font-extrabold rounded-2xl transition shadow-xl shadow-amber-500/20 text-sm flex items-center justify-center">
+                <i class="fa-solid fa-bolt mr-2"></i> Get Your Tag Bundle (KSh 50)
             </a>
-            <a href="explore.html" class="px-8 py-4 rounded-xl glass-card text-slate-200 font-semibold text-base hover:bg-white/5 transition">
-                Explore Technology
+            <a href="item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys" target="_blank" class="w-full sm:w-auto px-8 py-4 glass-card hover:bg-white/10 text-white font-bold rounded-2xl transition text-sm flex items-center justify-center border border-white/10">
+                <i class="fa-solid fa-qrcode mr-2 text-amber-400"></i> Test Live Scan Page
             </a>
-        </div>
-
-        <!-- Stats Bar -->
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mt-20 w-full max-w-4xl">
-            <div class="glass-card p-6 rounded-2xl text-center">
-                <div class="text-3xl font-bold gold-gradient-text">KSh 50</div>
-                <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">For 5 NFC/QR Tags</div>
-            </div>
-            <div class="glass-card p-6 rounded-2xl text-center">
-                <div class="text-3xl font-bold gold-gradient-text">4 Years</div>
-                <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Tag Lifespan</div>
-            </div>
-            <div class="col-span-2 md:col-span-1 glass-card p-6 rounded-2xl text-center">
-                <div class="text-3xl font-bold gold-gradient-text">100%</div>
-                <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Privacy Guaranteed</div>
-            </div>
         </div>
     </header>
 
-    <!-- Pricing Section with 3D Card Flipping Effect -->
-    <section id="pricing" class="py-24 px-6 md:px-12 max-w-5xl mx-auto perspective-container">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Student-Friendly Investment</h2>
-            <p class="text-slate-400">Hover over the cards to experience the 3D interactive luxury tilt effect.</p>
+    <!-- Feature Grid Preview -->
+    <section class="max-w-5xl mx-auto px-6 pb-32 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
+                <i class="fa-solid fa-user-secret"></i>
+            </div>
+            <h3 class="text-base font-bold text-white">100% Privacy Masked</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">No phone numbers or names on display. Protects students from harassment, spam, and blackmail.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <!-- Starter Tier (3D Tilt) -->
-            <div class="glass-card card-3d p-8 md:p-10 rounded-3xl relative border border-amber-500/30">
-                <div class="absolute -top-3 right-8 bg-amber-500 text-black text-xs font-extrabold px-3 py-1 rounded-full uppercase">Most Popular</div>
-                <h3 class="text-2xl font-bold mb-2">Student Starter Pack</h3>
-                <p class="text-slate-400 text-sm mb-6">Ideal for protecting keys, textbooks, and calculators.</p>
-                
-                <div class="flex items-baseline mb-6">
-                    <span class="text-4xl md:text-5xl font-extrabold gold-gradient-text">KSh 50</span>
-                    <span class="text-slate-400 ml-2 text-sm">/ 5 stickers bundle</span>
-                </div>
-
-                <ul class="space-y-4 mb-8 text-sm text-slate-300">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> 5 High-durability NFC/QR tags</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> 4 Full years of cloud registry</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> Instant anonymous notifications</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> Baraton Campus coverage</li>
-                </ul>
-
-                <button onclick="alert('Redirecting to Baraton Student M-PESA Secure Checkout...')" class="w-full py-4 rounded-xl bg-amber-500 text-black font-extrabold hover:bg-amber-400 transition shadow-lg shadow-amber-500/20">
-                    Get Your 5 Tags Now
-                </button>
+        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
+                <i class="fa-solid fa-bolt"></i>
             </div>
+            <h3 class="text-base font-bold text-white">Zero App Friction</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Finders scan with their standard phone camera. No app downloads or account logins required.</p>
+        </div>
 
-            <!-- Renewal Tier (3D Tilt) -->
-            <div class="glass-card card-3d p-8 md:p-10 rounded-3xl">
-                <h3 class="text-2xl font-bold mb-2">Extended Storage</h3>
-                <p class="text-slate-400 text-sm mb-6">For continued cloud database preservation after your initial 4-year undergraduate term.</p>
-                
-                <div class="flex items-baseline mb-6">
-                    <span class="text-4xl md:text-5xl font-extrabold text-white">KSh 100</span>
-                    <span class="text-slate-400 ml-2 text-sm">/ year per bundle</span>
-                </div>
-
-                <ul class="space-y-4 mb-8 text-sm text-slate-300">
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> Continued cloud storage maintenance</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> Priority item recovery support</li>
-                    <li class="flex items-center"><i class="fa-solid fa-check text-amber-400 mr-3"></i> Advanced tag telemetry & stats</li>
-                </ul>
-
-                <button onclick="alert('Subscription renewal portal opens after initial activation.')" class="w-full py-4 rounded-xl glass-card text-white font-semibold hover:bg-white/10 transition border border-white/10">
-                    Learn About Renewal
-                </button>
+        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
+                <i class="fa-solid fa-droplet"></i>
             </div>
+            <h3 class="text-base font-bold text-white">Industrial Durability</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">Printed locally and sealed with clear packing tape for 100% waterproof campus-proof longevity.</p>
         </div>
     </section>
 
+    <!-- Futuristic MacBook-Style Floating Dock -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <nav class="mac-dock px-4 py-3 rounded-3xl flex items-center space-x-4">
+            
+            <!-- Home -->
+            <a href="index.html" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg">
+                <i class="fa-solid fa-house text-base"></i>
+                <span class="tooltip">Home</span>
+            </a>
+
+            <!-- Claim / Checkout Portal -->
+            <a href="claim.html" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-lg">
+                <i class="fa-solid fa-bag-shopping text-base"></i>
+                <span class="tooltip">Get Tags (Claim)</span>
+            </a>
+
+            <!-- Test Scan Page -->
+            <a href="item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys" target="_blank" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-lg">
+                <i class="fa-solid fa-qrcode text-base"></i>
+                <span class="tooltip">Test Scan Page</span>
+            </a>
+
+            <!-- Batch QR Grid -->
+            <a href="generate-qr.html" target="_blank" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-lg">
+                <i class="fa-solid fa-layer-group text-base"></i>
+                <span class="tooltip">Batch QR Sheet</span>
+            </a>
+
+            <div class="w-[1px] h-8 bg-white/10 mx-1"></div>
+
+            <!-- Direct Contact / GitHub -->
+            <a href="https://github.com/mugokm/baraton-digital--buildoff" target="_blank" class="dock-item w-12 h-12 rounded-2xl bg-amber-500 text-black font-bold flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <i class="fa-brands fa-github text-lg"></i>
+                <span class="tooltip">GitHub Repository</span>
+            </a>
+
+        </nav>
+    </div>
+
     <!-- Footer -->
-    <footer class="border-t border-white/5 py-12 px-6 md:px-12 text-center text-slate-500 text-sm">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-black font-bold">
-                    <i class="fa-solid fa-shield-halved text-xs"></i>
-                </div>
-                <span class="text-white font-bold">TagVault  Baraton University</span>
-            </div>
-            <p>Try out now</p>
-            <div class="flex space-x-6 text-slate-400">
-                <a href="item.html" class="hover:text-amber-400 transition"><i class="fa-brands fa-github text-lg"></i> GitHub</a>
-            </div>
-        </div>
+    <footer class="border-t border-white/5 py-8 text-center text-xs text-slate-500 relative z-10 mb-20">
+        TagVault Campus Asset Recovery &bull; University of Eastern Africa, Baraton &bull; ISC Hackathon 2026
     </footer>
 
-    <!-- Custom Cursor Script -->
     <script>
+        // Custom Cursor Tracker Script
         const cursorDot = document.querySelector('[data-cursor-dot]');
         const cursorOutline = document.querySelector('[data-cursor-outline]');
-
         window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 400, fill: "forwards" });
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
         });
     </script>
 </body>
