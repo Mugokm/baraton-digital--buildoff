@@ -1,200 +1,142 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TagVault // Campus Asset Recovery & Protection</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        obsidian: '#0a0a0c',
-                        carddark: '#121318',
-                        goldglow: '#f59e0b',
-                        luxurygold: '#d97706',
-                    },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
-    <style>
-        body, a, button { cursor: none !important; }
-        .cursor-dot, .cursor-outline {
-            pointer-events: none;
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
-        .cursor-outline {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(245, 158, 11, 0.5);
-            transition: width 0.2s, height 0.2s, transform 0.1s;
-        }
-        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(18, 19, 24, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.12); }
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Futuristic macOS Dock Styles */
-        .mac-dock {
-            background: rgba(18, 19, 24, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(245, 158, 11, 0.15);
-        }
-        .dock-item {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        .dock-item:hover {
-            transform: translateY(-12px) scale(1.25);
-        }
-        /* Tooltip */
-        .dock-item .tooltip {
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%) translateY(10px);
-            padding: 4px 10px;
-            background: rgba(10, 10, 12, 0.95);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-            color: #f3f4f6;
-            font-size: 10px;
-            font-weight: 700;
-            white-space: nowrap;
-            border-radius: 8px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.2s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .dock-item:hover .tooltip {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TagVault — Privacy-First Asset Recovery for Baraton Students</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0C204C; --navy-deep: #071330; --cream: #FFF5CB;
+      --ivory: #FCFBF7; --gold: #C89D3C; --gold-light: #E6C775;
+      --ink: #111827; --muted: #525B70; --border: rgba(12, 32, 76, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--ivory); color: var(--ink);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden; line-height: 1.65; padding-bottom: 120px;
+    }
+    @media (pointer: fine) { body, a, button, input { cursor: none; } }
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      border-radius: 50%; transform: translate(-50%, -50%);
+    }
+    .cursor-dot { width: 7px; height: 7px; background: var(--gold); }
+    .cursor-ring {
+      width: 38px; height: 38px; border: 1.5px solid var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; text-transform: uppercase; color: var(--cream);
+      transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.25s ease;
+    }
+    .cursor-ring.is-hovering {
+      width: 68px; height: 68px; background-color: rgba(12, 32, 76, 0.92); border-color: var(--gold);
+    }
+    @media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+    .serif { font-family: 'Fraunces', Georgia, serif; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    .top-strip { padding: 20px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .brand-mark { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); font-weight: 700; }
+    .brand-crest { width: 36px; height: 36px; border-radius: 10px; background: var(--navy); color: var(--cream); border: 1px solid var(--gold); display: grid; place-items: center; font-family: 'Fraunces', serif; }
+    .api-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(12, 32, 76, 0.06); color: var(--navy); font-size: 12px; font-weight: 600; }
+    .api-dot { width: 8px; height: 8px; border-radius: 50%; background: #10B981; }
+    header.hero { padding: 76px 0 64px; text-align: center; max-width: 820px; margin: 0 auto; }
+    .hackathon-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--cream); border: 1px solid rgba(200, 157, 60, 0.5); color: var(--navy); padding: 8px 18px; border-radius: 999px; font-size: 13px; font-weight: 600; margin-bottom: 28px; }
+    header.hero h1 { font-family: 'Fraunces', Georgia, serif; font-size: clamp(2.4rem, 5vw, 3.85rem); line-height: 1.1; color: var(--navy); margin-bottom: 22px; font-weight: 600; }
+    header.hero h1 span { color: var(--gold); font-style: italic; font-weight: 400; }
+    header.hero p { font-size: 17px; color: var(--muted); max-width: 640px; margin: 0 auto 36px; }
+    .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; }
+    .btn-primary { background: var(--navy); color: var(--cream); padding: 16px 28px; border-radius: 14px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--navy); transition: transform 0.25s ease; }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-secondary { background: #FFFFFF; color: var(--navy); padding: 16px 28px; border-radius: 14px; text-decoration: none; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--border); transition: background 0.25s ease; }
+    .btn-secondary:hover { background: var(--cream); border-color: var(--gold); }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 24px 0 64px; }
+    .pillar-card { background: #FFFFFF; border: 1px solid var(--border); border-radius: 22px; padding: 32px; transition: transform 0.3s ease; }
+    .pillar-card:hover { transform: translateY(-4px); border-color: var(--gold); }
+    .pillar-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--navy); color: var(--gold-light); display: grid; place-items: center; font-size: 18px; margin-bottom: 20px; }
+    .pillar-card h3 { font-size: 19px; color: var(--navy); margin-bottom: 10px; }
+    .pillar-card p { font-size: 14.5px; color: var(--muted); }
+    .lifecycle-banner { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); color: var(--cream); border-radius: 24px; padding: 40px; border: 1px solid rgba(230, 199, 117, 0.3); display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; align-items: center; margin-bottom: 48px; }
+    .lifecycle-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .stat-box { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 245, 203, 0.16); border-radius: 16px; padding: 20px; }
+    .stat-box strong { display: block; font-family: 'Fraunces', serif; font-size: 24px; color: var(--gold-light); }
+    .stat-box span { font-size: 12.5px; opacity: 0.82; }
+    .floating-dock-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 500; }
+    .floating-dock { display: flex; gap: 4px; padding: 8px 12px; border-radius: 999px; background: rgba(12, 32, 76, 0.94); backdrop-filter: blur(16px); border: 1px solid rgba(230, 199, 117, 0.35); box-shadow: 0 20px 40px rgba(7, 19, 48, 0.32); }
+    .floating-dock a { color: var(--cream); text-decoration: none; font-size: 12.5px; font-weight: 500; padding: 8px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s ease, color 0.2s ease; }
+    .floating-dock a:hover, .floating-dock a.active { background: rgba(255, 245, 203, 0.16); color: var(--gold-light); }
+    footer { text-align: center; font-size: 13.5px; color: var(--muted); padding: 24px 0; border-top: 1px solid var(--border); }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 860px) { .pillars, .lifecycle-banner { grid-template-columns: 1fr; } .floating-dock a span { display: none; } }
+  </style>
 </head>
-<body class="bg-obsidian text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
-
-    <!-- Custom Cursor Tracker -->
-    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
-    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
-
-    <!-- Hero Section -->
-    <header class="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center relative z-10">
-        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold tracking-wide uppercase mb-6 shadow-lg shadow-amber-500/10">
-            <i class="fa-solid fa-shield-halved animate-pulse"></i>
-            <span>ISC Digital Build-Off Hackathon 2026 &bull; Baraton</span>
-        </div>
-
-        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6">
-            Privacy-First Asset Recovery for <span class="gold-gradient-text">Baraton Students</span>
-        </h1>
-
-        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed mb-10">
-            Protect your keys, laptops, and student IDs with zero-app QR stickers. Scan to instantly connect with owners via direct Gmail web intents without ever exposing phone numbers.
-        </p>
-
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="claim.html" class="w-full sm:w-auto px-8 py-4 bg-amber-500 hover:bg-amber-400 text-black font-extrabold rounded-2xl transition shadow-xl shadow-amber-500/20 text-sm flex items-center justify-center">
-                <i class="fa-solid fa-bolt mr-2"></i> Get Your Tag Bundle (KSh 50)
-            </a>
-            <a href="item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys" target="_blank" class="w-full sm:w-auto px-8 py-4 glass-card hover:bg-white/10 text-white font-bold rounded-2xl transition text-sm flex items-center justify-center border border-white/10">
-                <i class="fa-solid fa-qrcode mr-2 text-amber-400"></i> Test Live Scan Page
-            </a>
-        </div>
-    </header>
-
-    <!-- Feature Grid Preview -->
-    <section class="max-w-5xl mx-auto px-6 pb-32 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
-                <i class="fa-solid fa-user-secret"></i>
-            </div>
-            <h3 class="text-base font-bold text-white">100% Privacy Masked</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">No phone numbers or names on display. Protects students from harassment, spam, and blackmail.</p>
-        </div>
-
-        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <h3 class="text-base font-bold text-white">Zero App Friction</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">Finders scan with their standard phone camera. No app downloads or account logins required.</p>
-        </div>
-
-        <div class="glass-card p-6 rounded-3xl border border-white/5 space-y-3">
-            <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
-                <i class="fa-solid fa-droplet"></i>
-            </div>
-            <h3 class="text-base font-bold text-white">Industrial Durability</h3>
-            <p class="text-xs text-slate-400 leading-relaxed">Printed locally and sealed with clear packing tape for 100% waterproof campus-proof longevity.</p>
-        </div>
-    </section>
-
-    <!-- Futuristic MacBook-Style Floating Dock -->
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
-        <nav class="mac-dock px-4 py-3 rounded-3xl flex items-center space-x-4">
-            
-            <!-- Home -->
-            <a href="index.html" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-lg">
-                <i class="fa-solid fa-house text-base"></i>
-                <span class="tooltip">Home</span>
-            </a>
-
-            <!-- Claim / Checkout Portal -->
-            <a href="claim.html" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-lg">
-                <i class="fa-solid fa-bag-shopping text-base"></i>
-                <span class="tooltip">Get Tags (Claim)</span>
-            </a>
-
-            <!-- Test Scan Page -->
-            <a href="item.html?email=skibon2711@ueab.ac.ke&item=Dorm%20Keys" target="_blank" class="dock-item w-12 h-12 rounded-2xl bg-black/60 border border-white/10 hover:border-amber-500/50 flex items-center justify-center text-slate-300 hover:text-amber-400 shadow-lg">
-                <i class="fa-solid fa-qrcode text-base"></i>
-                <span class="tooltip">Test Scan Page</span>
-            </a>
-
-            <div class="w-[1px] h-8 bg-white/10 mx-1"></div>
-
-            <!-- Direct Contact / GitHub -->
-            <a href="https://github.com/mugokm/baraton-digital--buildoff" target="_blank" class="dock-item w-12 h-12 rounded-2xl bg-amber-500 text-black font-bold flex items-center justify-center shadow-lg shadow-amber-500/20">
-                <i class="fa-brands fa-github text-lg"></i>
-                <span class="tooltip">GitHub Repository</span>
-            </a>
-
-        </nav>
+<body>
+  <div class="grain"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"><span id="cursorLabel"></span></div>
+  <div class="container">
+    <div class="top-strip">
+      <a href="index.html" class="brand-mark" data-cursor="HOME"><div class="brand-crest">T</div><span>TagVault &bull; UEAB</span></a>
+      <div class="api-pill"><span class="api-dot"></span><span>Static Client Mode</span></div>
     </div>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-8 text-center text-xs text-slate-500 relative z-10 mb-20">
-        TagVault Campus Asset Recovery &bull; University of Eastern Africa, Baraton &bull; ISC Hackathon 2026
-    </footer>
-
-    <script>
-        // Custom Cursor Tracker Script
-        const cursorDot = document.querySelector('[data-cursor-dot]');
-        const cursorOutline = document.querySelector('[data-cursor-outline]');
-        window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
-        });
-    </script>
+    <header class="hero reveal">
+      <div class="hackathon-badge"><i class="fa-solid fa-shield-halved"></i><span>ISC Digital Build-Off Hackathon 2026 &bull; Baraton</span></div>
+      <h1>Privacy-First Asset Recovery for <span>Baraton Students</span></h1>
+      <p>Protect your keys, laptops, and student IDs with zero-app QR &amp; NFC stickers. Scan to instantly connect with owners via direct Gmail web intents without ever exposing phone numbers.</p>
+      <div class="hero-actions">
+        <a href="claim.html" class="btn-primary" data-cursor="CLAIM"><i class="fa-solid fa-qrcode"></i> Get Your Tag Bundle (KSh 50)</a>
+        <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys&email=skibon2711@ueab.ac.ke" class="btn-secondary" data-cursor="SCAN"><i class="fa-solid fa-mobile-screen-button"></i> Test Live Scan Page</a>
+      </div>
+    </header>
+    <section class="pillars">
+      <div class="pillar-card reveal" data-cursor="SAFE"><div class="pillar-icon"><i class="fa-solid fa-user-secret"></i></div><h3>100% Privacy Masked</h3><p>No phone numbers or names on display. Protects students from harassment, spam, and blackmail.</p></div>
+      <div class="pillar-card reveal" data-cursor="FAST"><div class="pillar-icon"><i class="fa-solid fa-bolt"></i></div><h3>Zero App Friction</h3><p>Finders scan with their standard phone camera or NFC tap. No app downloads or account logins required.</p></div>
+      <div class="pillar-card reveal" data-cursor="TOUGH"><div class="pillar-icon"><i class="fa-solid fa-shield"></i></div><h3>Industrial Durability</h3><p>Printed locally and sealed with clear packing tape for 100% waterproof campus-proof longevity.</p></div>
+    </section>
+    <section class="lifecycle-banner reveal">
+      <div>
+        <span style="color:var(--gold-light); font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-weight:700;">4-Year Degree Lifecycle</span>
+        <h2 class="serif" style="font-size:2rem; margin:8px 0 12px;">5 Tags for KSh 50. Covered for 4 Years.</h2>
+        <p style="opacity:0.84; font-size:14.5px;">Every student bundle includes 5 unique QR/NFC stickers with full registry hosting for 4 academic years. After 4 years, retain extended archival data storage for just <strong>KSh 100/year</strong>.</p>
+      </div>
+      <div class="lifecycle-stats">
+        <div class="stat-box"><strong>KSh 50</strong><span>5 Hybrid QR/NFC Tags</span></div>
+        <div class="stat-box"><strong>4 Years</strong><span>Included Active Hosting</span></div>
+        <div class="stat-box"><strong>KSh 100/yr</strong><span>Post-4yr Data Storage</span></div>
+        <div class="stat-box"><strong>5+</strong><span>Active Campus Tags</span></div>
+      </div>
+    </section>
+    <footer>TagVault Campus Asset Recovery &bull; University of Eastern Africa, Baraton &bull; ISC Hackathon 2026</footer>
+  </div>
+  <div class="floating-dock-wrap">
+    <nav class="floating-dock">
+      <a href="index.html" class="active" data-cursor="HOME"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a href="claim.html" data-cursor="CLAIM"><i class="fa-solid fa-tag"></i><span>Claim</span></a>
+      <a href="explore.html" data-cursor="FEED"><i class="fa-solid fa-compass"></i><span>Explore</span></a>
+      <a href="recovered.html" data-cursor="LOGS"><i class="fa-solid fa-check-to-slot"></i><span>Recovered</span></a>
+      <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys&email=skibon2711@ueab.ac.ke" data-cursor="SCAN"><i class="fa-solid fa-qrcode"></i><span>Scan</span></a>
+      <a href="admin.html" data-cursor="ADMIN"><i class="fa-solid fa-lock"></i><span>Admin</span></a>
+    </nav>
+  </div>
+  <script>
+    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing'), label = document.getElementById('cursorLabel');
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2, rx = mx, ry = my;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+    (function loop() { rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(loop); })();
+    document.querySelectorAll('[data-cursor]').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.classList.add('is-hovering'); label.textContent = el.dataset.cursor; });
+      el.addEventListener('mouseleave', () => { ring.classList.remove('is-hovering'); label.textContent = ''; });
+    });
+    const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
 </body>
 </html>
