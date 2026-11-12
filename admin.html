@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TagVault Admin Database // Baraton</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.12); }
+    </style>
+</head>
+<body class="p-8 max-w-5xl mx-auto min-h-screen flex flex-col justify-between">
+
+    <div>
+        <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+            <div>
+                <h1 class="text-2xl font-extrabold text-white">TagVault Database Ledger</h1>
+                <p class="text-xs text-slate-400 mt-1">University of Eastern Africa, Baraton &bull; Live Admin View</p>
+            </div>
+            <div class="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">
+                <i class="fa-solid fa-database mr-1.5"></i> PostgreSQL / Local Sync Active
+            </div>
+        </div>
+
+        <!-- Database Table -->
+        <div class="glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="bg-black/60 text-slate-400 border-b border-white/10 uppercase tracking-wider">
+                        <th class="p-4">Student ID</th>
+                        <th class="p-4">UEAB Email</th>
+                        <th class="p-4">Protected Item</th>
+                        <th class="p-4">M-Pesa Receipt</th>
+                        <th class="p-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="db-rows" class="divide-y divide-white/5">
+                    <!-- Sample Data Row for Demo -->
+                    <tr class="hover:bg-white/5">
+                        <td class="p-4 font-bold text-amber-400">skibon2711</td>
+                        <td class="p-4 text-slate-300">skibon2711@ueab.ac.ke</td>
+                        <td class="p-4 text-white">Dorm Keys</td>
+                        <td class="p-4 font-mono text-emerald-400">SHB89K2L9P</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">Active</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-slate-500 pt-8">
+        TagVault Secure Database Visualizer &bull; ISC Build-Off 2026
+    </footer>
+
+    <script>
+        // In a real production app, this fetches from Supabase. 
+        // For the hackathon demo, it pulls any user that just registered through claim.html!
+        const savedRegistrations = JSON.parse(localStorage.getItem('tagvault_db') || '[]');
+        const tbody = document.getElementById('db-rows');
+
+        if (savedRegistrations.length > 0) {
+            savedRegistrations.forEach(reg => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5";
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-amber-400">${reg.id}</td>
+                    <td class="p-4 text-slate-300">${reg.email}</td>
+                    <td class="p-4 text-white">${reg.item}</td>
+                    <td class="p-4 font-mono text-emerald-400">${reg.receipt}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">Active</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
