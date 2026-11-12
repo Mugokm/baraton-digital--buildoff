@@ -1,140 +1,118 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Verification // TagVault Baraton</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        obsidian: '#0a0a0c',
-                        carddark: '#121318',
-                        goldglow: '#f59e0b',
-                        luxurygold: '#d97706',
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body, a, button { cursor: none !important; }
-        .cursor-dot, .cursor-outline {
-            pointer-events: none;
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
-        .cursor-outline {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(245, 158, 11, 0.5);
-            transition: width 0.2s, height 0.2s, transform 0.1s;
-        }
-        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.1); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Found Campus Item — TagVault UEAB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0C204C; --navy-deep: #071330; --cream: #FFF5CB;
+      --ivory: #FCFBF7; --gold: #C89D3C; --muted: #525B70; --border: rgba(12, 32, 76, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--ivory); color: #111827; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; display: grid; place-items: center; padding: 24px 24px 100px; }
+    @media (pointer: fine) { body, a, button, input, textarea { cursor: none; } }
+    .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; border-radius: 50%; transform: translate(-50%, -50%); }
+    .cursor-dot { width: 7px; height: 7px; background: var(--gold); }
+    .cursor-ring { width: 36px; height: 36px; border: 1.5px solid var(--navy); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+    .cursor-ring.is-hovering { width: 58px; height: 58px; background: rgba(12, 32, 76, 0.12); border-color: var(--gold); }
+    @media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+    .scan-card { width: 100%; max-width: 480px; background: #FFFFFF; border-radius: 26px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 28px 60px rgba(12, 32, 76, 0.12); }
+    .scan-header { background: linear-gradient(145deg, var(--navy), var(--navy-deep)); color: var(--cream); padding: 32px 28px; text-align: center; }
+    .shield-ring { width: 58px; height: 58px; border-radius: 50%; background: rgba(255, 245, 203, 0.12); border: 1px solid var(--gold); display: grid; place-items: center; margin: 0 auto 14px; color: #E6C775; font-size: 22px; }
+    .scan-header h1 { font-family: 'Fraunces', serif; font-size: 1.75rem; margin-bottom: 6px; }
+    .scan-body { padding: 28px; }
+    .item-pill { background: var(--cream); border: 1px solid rgba(200, 157, 60, 0.45); border-radius: 14px; padding: 14px 18px; margin-bottom: 22px; display: flex; justify-content: space-between; align-items: center; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    textarea, input { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); font-family: inherit; font-size: 14px; margin-bottom: 16px; background: var(--ivory); }
+    textarea:focus, input:focus { outline: none; border-color: var(--gold); background: #FFF; }
+    .gmail-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--navy); color: var(--cream); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s; }
+    .gmail-btn:hover { transform: translateY(-2px); }
+    .privacy-note { margin-top: 18px; font-size: 12px; color: var(--muted); text-align: center; }
+    .floating-dock-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 500; }
+    .floating-dock { display: flex; gap: 4px; padding: 8px 12px; border-radius: 999px; background: rgba(12, 32, 76, 0.94); border: 1px solid rgba(230, 199, 117, 0.35); backdrop-filter: blur(14px); }
+    .floating-dock a { color: var(--cream); text-decoration: none; font-size: 12.5px; padding: 8px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+    .floating-dock a.active { background: rgba(255, 245, 203, 0.16); color: #E6C775; }
+  </style>
 </head>
-<body class="bg-obsidian text-slate-100 min-h-screen flex items-center justify-center p-6">
-
-    <!-- Custom Cursor Tracker -->
-    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
-    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
-
-    <div class="max-w-md w-full glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl text-center">
-        <!-- Shield Icon -->
-        <div class="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 border border-amber-500/20 shadow-lg shadow-amber-500/10">
-            <i class="fa-solid fa-shield-halved"></i>
-        </div>
-        
-        <h1 class="text-2xl font-extrabold mb-1">TagVault Ownership</h1>
-        <p class="text-slate-400 text-xs uppercase tracking-wider mb-6">University of Eastern Africa, Baraton</p>
-
-        <!-- Dynamic Item & Owner Display Container -->
-        <div class="bg-black/50 p-6 rounded-2xl text-left border border-white/5 space-y-4 text-sm mb-6">
-            <div>
-                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Item Category</span>
-                <span id="display-item" class="text-base font-bold text-white flex items-center">
-                    <i class="fa-solid fa-box text-amber-400 mr-2"></i> Loading Item...
-                </span>
-            </div>
-
-            <hr class="border-white/5 my-2">
-
-            <div>
-                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Student Owner ID</span>
-                <span id="display-id" class="text-base font-bold text-amber-400">Loading ID...</span>
-            </div>
-
-            <hr class="border-white/5 my-2">
-
-            <div>
-                <span class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Verified School Email</span>
-                <div class="flex items-center justify-between bg-black/40 p-3 rounded-xl border border-white/5">
-                    <span id="display-email" class="font-bold text-slate-300 text-sm">Loading Email...</span>
-                    <button onclick="copyEmail()" class="px-3 py-1.5 bg-amber-500/20 text-amber-400 rounded-lg text-xs font-bold hover:bg-amber-500 hover:text-black transition">
-                        <i class="fa-solid fa-copy mr-1"></i> Copy
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Direct Gmail Web Action Button -->
-        <a id="action-gmail-btn" href="#" target="_blank" class="w-full py-4 bg-amber-500 text-black font-extrabold rounded-xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20 text-sm flex items-center justify-center">
-            <i class="fa-brands fa-google mr-2 text-base"></i> Open Gmail to Contact Student
-        </a>
+<body>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="scan-card">
+    <div class="scan-header">
+      <div class="shield-ring"><i class="fa-solid fa-hand-holding-heart"></i></div>
+      <h1>Registered Baraton Item</h1>
+      <p style="font-size:13.5px; opacity:0.84;">Thank you for helping return a fellow student's property safely.</p>
     </div>
+    <div class="scan-body">
+      <div class="item-pill">
+        <div>
+          <span style="font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); display:block;">Protected Asset</span>
+          <strong id="itemName" style="font-size:17px; color:var(--navy);">Dorm Keys</strong>
+        </div>
+        <span id="tagBadge" style="font-size:11.5px; font-weight:700; color:var(--navy); background:#FFF; padding:5px 10px; border-radius:8px; border:1px solid var(--border);">UEAB-8841</span>
+      </div>
+      <label>Where did you find it? (Optional Pickup Note)</label>
+      <textarea id="finderNote" rows="2" placeholder="e.g. Found near the library entrance — left with campus security desk." data-hover></textarea>
+      <label>Your Name or Contact (Optional)</label>
+      <input type="text" id="finderContact" placeholder="e.g. Faith / 07XX XXX XXX" data-hover />
+      <button class="gmail-btn" id="notifyBtn" data-hover><i class="fa-solid fa-envelope"></i> Notify Owner via Gmail Web Intent</button>
+      <p class="privacy-note"><i class="fa-solid fa-lock"></i> Owner's phone number &amp; hostel are 100% masked by TagVault UEAB.</p>
+    </div>
+  </div>
+  <div class="floating-dock-wrap">
+    <nav class="floating-dock">
+      <a href="index.html">Home</a>
+      <a href="claim.html">Claim</a>
+      <a href="explore.html">Explore</a>
+      <a href="recovered.html">Recovered</a>
+      <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys&email=skibon2711@ueab.ac.ke" class="active">Scan</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+  <script>
+    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+    (function loop() { rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(loop); })();
+    document.querySelectorAll('[data-hover], button, input, textarea, a').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('is-hovering'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('is-hovering'));
+    });
+    const params = new URLSearchParams(window.location.search);
+    const tagCode = params.get('tag') || 'UEAB-8841';
+    const ownerEmail = params.get('email') || 'skibon2711@ueab.ac.ke';
+    const itemLabel = params.get('item') || 'Dorm Keys';
+    document.getElementById('itemName').textContent = itemLabel;
+    document.getElementById('tagBadge').textContent = tagCode;
 
-    <script>
-        // 1. Parse parameters from the scanned QR code URL
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Grab specific email, fallback to a test student if opened directly without query strings
-        const targetEmail = urlParams.get('email') || 'skibon2711@ueab.ac.ke';
-        
-        // Extract the unique student ID from before the '@' symbol (e.g. skibon2711)
-        const studentId = targetEmail.split('@')[0];
-        
-        // Grab specific item, fallback if missing
-        const itemName = urlParams.get('item') || 'Campus Valuables';
+    document.getElementById('notifyBtn').addEventListener('click', () => {
+      const note = document.getElementById('finderNote').value.trim() || "Found on Baraton campus.";
+      const contact = document.getElementById('finderContact').value.trim() || "Anonymous Finder";
+      const scanEntry = {
+        tag_code: tagCode,
+        item_label: itemLabel,
+        owner_email: ownerEmail,
+        finder_note: `${note} (Finder: ${contact})`,
+        timestamp: new Date().toLocaleString()
+      };
+      let existingScans = [];
+      try { existingScans = JSON.parse(localStorage.getItem('tagvault_scans')) || []; } catch(e){}
+      existingScans.unshift(scanEntry);
+      localStorage.setItem('tagvault_scans', JSON.stringify(existingScans));
 
-        // 2. Inject specific student and item data into the page elements
-        document.getElementById('display-id').innerText = studentId;
-        document.getElementById('display-email').innerText = targetEmail;
-        document.getElementById('display-item').innerHTML = `<i class="fa-solid fa-box text-amber-400 mr-2"></i> ${itemName}`;
-
-        // 3. Build dynamic Gmail compose web link targeting this exact student
-        const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&to=${targetEmail}&su=Found%20Your%20Lost%20Item%20(${encodeURIComponent(itemName)})&body=Hello,%20I%20found%20your%20lost%20${encodeURIComponent(itemName)}%20registered%20under%20TagVault%20Baraton.`;
-        document.getElementById('action-gmail-btn').href = gmailComposeUrl;
-
-        // 4. Copy Email fallback function
-        function copyEmail() {
-            navigator.clipboard.writeText(targetEmail);
-            alert('Student email copied to clipboard: ' + targetEmail);
-        }
-
-        // Custom Cursor Tracker Script
-        const cursorDot = document.querySelector('[data-cursor-dot]');
-        const cursorOutline = document.querySelector('[data-cursor-outline]');
-        window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
-        });
-    </script>
+      const subject = encodeURIComponent(`[TagVault UEAB] Found Your Protected ${itemLabel} (${tagCode})`);
+      const body = encodeURIComponent(
+        `Hello,\n\nI just scanned your TagVault sticker on your "${itemLabel}" at the University of Eastern Africa, Baraton.\n\n` +
+        `Pickup / Location Note: ${note}\n` +
+        `Finder Contact: ${contact}\n\n` +
+        `— Sent via TagVault Campus Asset Recovery (UEAB)`
+      );
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(ownerEmail)}&su=${subject}&body=${body}`, '_blank');
+    });
+  </script>
 </body>
 </html>
  
