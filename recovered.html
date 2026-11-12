@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recovered Items Feed — TagVault UEAB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0C204C; --cream: #FFF5CB; --ivory: #FCFBF7;
+      --gold: #C89D3C; --muted: #525B70; --border: rgba(12, 32, 76, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--ivory); color: #111827;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 36px 24px 120px;
+    }
+    @media (pointer: fine) { body, a, button { cursor: none; } }
+
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      border-radius: 50%; transform: translate(-50%, -50%);
+    }
+    .cursor-dot { width: 7px; height: 7px; background: var(--gold); }
+    .cursor-ring {
+      width: 36px; height: 36px; border: 1.5px solid var(--navy);
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+    }
+    .cursor-ring.is-hovering { width: 58px; height: 58px; background: rgba(12, 32, 76, 0.12); border-color: var(--gold); }
+    @media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+
+    .container { max-width: 1040px; margin: 0 auto; }
+    .header-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    h1 { font-family: 'Fraunces', serif; color: var(--navy); font-size: 2.3rem; margin-bottom: 6px; }
+    p { color: var(--muted); font-size: 15px; }
+
+    .panel {
+      background: #FFF; border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; box-shadow: 0 10px 30px rgba(12, 32, 76, 0.05);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    th { color: var(--navy); font-weight: 700; background: var(--ivory); }
+    tr:last-child td { border-bottom: none; }
+
+    .tag-pill {
+      background: var(--cream); color: var(--navy); padding: 4px 10px;
+      border-radius: 6px; font-weight: 700; font-family: monospace; font-size: 13px;
+    }
+    .email-pill {
+      background: rgba(12, 32, 76, 0.06); color: var(--navy); padding: 4px 10px;
+      border-radius: 6px; font-weight: 600; font-size: 13px;
+    }
+
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
+    .empty-state i { font-size: 36px; color: var(--gold); margin-bottom: 12px; display: block; }
+
+    /* Floating Navigation Dock */
+    .floating-dock-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 500; }
+    .floating-dock {
+      display: flex; gap: 4px; padding: 8px 12px; border-radius: 999px;
+      background: rgba(12, 32, 76, 0.94); border: 1px solid rgba(230, 199, 117, 0.35);
+      backdrop-filter: blur(14px);
+    }
+    .floating-dock a {
+      color: var(--cream); text-decoration: none; font-size: 12.5px; padding: 8px 12px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .floating-dock a.active { background: rgba(255, 245, 203, 0.16); color: #E6C775; }
+  </style>
+</head>
+<body>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <div class="container">
+    <div class="header-row">
+      <div>
+        <h1>Recovered Items &amp; Scans Feed</h1>
+        <p>Live audit showing school emails and timestamps for every scanned and recovered asset.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table id="recoveredTable">
+        <thead>
+          <tr>
+            <th>Tag ID</th>
+            <th>Protected Item</th>
+            <th>Student School Email</th>
+            <th>Recovery Date &amp; Time</th>
+            <th>Finder Note</th>
+          </tr>
+        </thead>
+        <tbody id="recoveredRows">
+          <tr><td colspan="5" class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading recovery logs...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="floating-dock-wrap">
+    <nav class="floating-dock">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="claim.html"><i class="fa-solid fa-tag"></i> Claim</a>
+      <a href="explore.html"><i class="fa-solid fa-compass"></i> Explore</a>
+      <a href="recovered.html" class="active"><i class="fa-solid fa-check-to-slot"></i> Recovered</a>
+      <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys&email=skibon2711@ueab.ac.ke"><i class="fa-solid fa-qrcode"></i> Scan</a>
+      <a href="admin.html"><i class="fa-solid fa-lock"></i> Admin</a>
+    </nav>
+  </div>
+
+  <script>
+    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+    let mx=0, my=0, rx=0, ry=0;
+    window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+    (function loop(){ rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); })();
+
+    function loadRecoveredLogs() {
+      let logs = [];
+      try { logs = JSON.parse(localStorage.getItem('tagvault_scans')) || []; } catch(e){ logs = []; }
+      const tbody = document.getElementById('recoveredRows');
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">
+              <i class="fa-solid fa-box-open"></i>
+              <strong>No items scanned or recovered yet.</strong>
+              <p style="font-size:13px; margin-top:4px;">Test a scan using the "Scan" tab in the dock to see records appear here instantly.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td><span class="tag-pill">${l.tag_code || 'UEAB-DEMO'}</span></td>
+          <td><strong>${l.item_label || 'Campus Item'}</strong></td>
+          <td><span class="email-pill">${l.owner_email || 'skibon2711@ueab.ac.ke'}</span></td>
+          <td style="font-weight:600; color:var(--navy);">${l.timestamp}</td>
+          <td style="color:var(--muted);">${l.finder_note || '—'}</td>
+        </tr>
+      `).join('');
+    }
+    loadRecoveredLogs();
+  </script>
+</body>
+</html>
