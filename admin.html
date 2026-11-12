@@ -1,80 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TagVault Admin Database // Baraton</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.12); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scanned IDs Audit — TagVault UEAB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0C204C; --cream: #FFF5CB; --ivory: #FCFBF7;
+      --gold: #C89D3C; --muted: #525B70; --border: rgba(12, 32, 76, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--ivory); color: #111827;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 36px 24px 120px;
+    }
+    .container { max-width: 1040px; margin: 0 auto; }
+    .header-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
+    }
+    h1 { font-family: 'Fraunces', serif; color: var(--navy); font-size: 2.3rem; margin-bottom: 6px; }
+    p { color: var(--muted); font-size: 15px; }
+
+    .btn-clear {
+      background: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5;
+      padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 13.5px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-clear:hover { background: #FEE2E2; }
+
+    .panel {
+      background: #FFF; border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; box-shadow: 0 10px 30px rgba(12, 32, 76, 0.05);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+    th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    th { color: var(--navy); font-weight: 700; background: var(--ivory); }
+    tr:last-child td { border-bottom: none; }
+
+    .tag-pill {
+      background: var(--cream); color: var(--navy); padding: 4px 10px;
+      border-radius: 6px; font-weight: 700; font-family: monospace; font-size: 13px;
+    }
+
+    .empty-state {
+      text-align: center; padding: 48px 20px; color: var(--muted);
+    }
+    .empty-state i { font-size: 36px; color: var(--gold); margin-bottom: 12px; display: block; }
+
+    /* Floating Navigation Dock */
+    .floating-dock-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 500; }
+    .floating-dock {
+      display: flex; gap: 6px; padding: 8px 12px; border-radius: 999px;
+      background: rgba(12, 32, 76, 0.94); border: 1px solid rgba(230, 199, 117, 0.35);
+      backdrop-filter: blur(14px);
+    }
+    .floating-dock a {
+      color: var(--cream); text-decoration: none; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .floating-dock a.active { background: rgba(255, 245, 203, 0.16); color: #E6C775; }
+  </style>
 </head>
-<body class="p-8 max-w-5xl mx-auto min-h-screen flex flex-col justify-between">
-
-    <div>
-        <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-            <div>
-                <h1 class="text-2xl font-extrabold text-white">TagVault Database Ledger</h1>
-                <p class="text-xs text-slate-400 mt-1">University of Eastern Africa, Baraton &bull; Live Admin View</p>
-            </div>
-            <div class="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold">
-                <i class="fa-solid fa-database mr-1.5"></i> PostgreSQL / Local Sync Active
-            </div>
-        </div>
-
-        <!-- Database Table -->
-        <div class="glass-card rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-            <table class="w-full text-left border-collapse text-xs">
-                <thead>
-                    <tr class="bg-black/60 text-slate-400 border-b border-white/10 uppercase tracking-wider">
-                        <th class="p-4">Student ID</th>
-                        <th class="p-4">UEAB Email</th>
-                        <th class="p-4">Protected Item</th>
-                        <th class="p-4">M-Pesa Receipt</th>
-                        <th class="p-4">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="db-rows" class="divide-y divide-white/5">
-                    <!-- Sample Data Row for Demo -->
-                    <tr class="hover:bg-white/5">
-                        <td class="p-4 font-bold text-amber-400">skibon2711</td>
-                        <td class="p-4 text-slate-300">skibon2711@ueab.ac.ke</td>
-                        <td class="p-4 text-white">Dorm Keys</td>
-                        <td class="p-4 font-mono text-emerald-400">SHB89K2L9P</td>
-                        <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">Active</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<body>
+  <div class="container">
+    <div class="header-row">
+      <div>
+        <h1>Scanned Tags &amp; IDs Audit</h1>
+        <p>Live browser-tracked telemetry of every QR code or NFC sticker scanned on campus.</p>
+      </div>
+      <button class="btn-clear" onclick="clearLogs()">
+        <i class="fa-solid fa-trash-can"></i> Clear Scan History
+      </button>
     </div>
 
-    <footer class="text-center text-xs text-slate-500 pt-8">
-        TagVault Secure Database Visualizer &bull; ISC Build-Off 2026
-    </footer>
+    <div class="panel">
+      <table id="scanTable">
+        <thead>
+          <tr>
+            <th>Tag ID / Code</th>
+            <th>Item Label</th>
+            <th>Owner Email</th>
+            <th>Finder Note</th>
+            <th>Scan Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="scanRows">
+          <tr><td colspan="5" class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading scan logs...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    <script>
-        // In a real production app, this fetches from Supabase. 
-        // For the hackathon demo, it pulls any user that just registered through claim.html!
-        const savedRegistrations = JSON.parse(localStorage.getItem('tagvault_db') || '[]');
-        const tbody = document.getElementById('db-rows');
+  <div class="floating-dock-wrap">
+    <nav class="floating-dock">
+      <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="claim.html"><i class="fa-solid fa-tag"></i> Claim</a>
+      <a href="explore.html"><i class="fa-solid fa-compass"></i> Explore</a>
+      <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys"><i class="fa-solid fa-qrcode"></i> Test Scan</a>
+      <a href="admin.html" class="active"><i class="fa-solid fa-lock"></i> Admin</a>
+    </nav>
+  </div>
 
-        if (savedRegistrations.length > 0) {
-            savedRegistrations.forEach(reg => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-white/5";
-                tr.innerHTML = `
-                    <td class="p-4 font-bold text-amber-400">${reg.id}</td>
-                    <td class="p-4 text-slate-300">${reg.email}</td>
-                    <td class="p-4 text-white">${reg.item}</td>
-                    <td class="p-4 font-mono text-emerald-400">${reg.receipt}</td>
-                    <td class="p-4"><span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">Active</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-    </script>
+  <script>
+    function loadScanLogs() {
+      // Pulls logs stored by browser localStorage when scanned via item.html
+      let logs = [];
+      try {
+        logs = JSON.parse(localStorage.getItem('tagvault_scans')) || [];
+      } catch (e) {
+        logs = [];
+      }
+
+      const tbody = document.getElementById('scanRows');
+
+      if (logs.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="empty-state">
+              <i class="fa-solid fa-shield-halved"></i>
+              <strong>No scans recorded yet.</strong>
+              <p style="font-size:13px; margin-top:4px;">Try clicking "Test Scan" in the bottom dock and submitting a finder note!</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = logs.map(l => `
+        <tr>
+          <td><span class="tag-pill">${l.tag_code || 'UEAB-DEMO'}</span></td>
+          <td><strong>${l.item_label || 'Dorm Keys'}</strong></td>
+          <td>${l.owner_email || 'skibon2711@ueab.ac.ke'}</td>
+          <td>${l.finder_note || '—'}</td>
+          <td style="color:var(--muted); font-size:13px;">${l.timestamp}</td>
+        </tr>
+      `).join('');
+    }
+
+    function clearLogs() {
+      if (confirm("Are you sure you want to clear all recorded scan history?")) {
+        localStorage.removeItem('tagvault_scans');
+        loadScanLogs();
+      }
+    }
+
+    loadScanLogs();
+  </script>
 </body>
 </html>
