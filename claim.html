@@ -1,330 +1,126 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claim Your Tags // TagVault Baraton</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QRCode.js for instant tag preview after payment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        obsidian: '#0a0a0c',
-                        carddark: '#121318',
-                        goldglow: '#f59e0b',
-                        luxurygold: '#d97706',
-                        mpesa: '#43B02A',
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body, a, button, input, select { cursor: none !important; }
-        .cursor-dot, .cursor-outline {
-            pointer-events: none;
-            position: fixed;
-            top: 0; left: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            z-index: 9999;
-            transition: opacity 0.3s ease;
-        }
-        .cursor-dot { width: 8px; height: 8px; background-color: #f59e0b; }
-        .cursor-outline {
-            width: 40px; height: 40px;
-            border: 1px solid rgba(245, 158, 11, 0.5);
-            transition: width 0.2s, height 0.2s, transform 0.1s;
-        }
-        body { background-color: #0a0a0c; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(18, 19, 24, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 215, 0, 0.12); }
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 50%, #b45309 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claim 5-Tag Bundle (KSh 50) — TagVault UEAB</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --navy: #0C204C; --cream: #FFF5CB; --ivory: #FCFBF7;
+      --gold: #C89D3C; --muted: #525B70; --border: rgba(12, 32, 76, 0.14);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--ivory); color: #111827; font-family: 'Plus Jakarta Sans', sans-serif; padding: 36px 20px 120px; }
+    @media (pointer: fine) { body, a, button, input { cursor: none; } }
+    .cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; border-radius: 50%; transform: translate(-50%, -50%); }
+    .cursor-dot { width: 7px; height: 7px; background: var(--gold); }
+    .cursor-ring { width: 36px; height: 36px; border: 1.5px solid var(--navy); transition: width 0.2s, height 0.2s, background-color 0.2s; }
+    .cursor-ring.is-hovering { width: 58px; height: 58px; background: rgba(12, 32, 76, 0.14); border-color: var(--gold); }
+    @media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; margin-bottom: 24px; }
+    .card { background: #FFFFFF; border: 1px solid var(--border); border-radius: 24px; padding: 36px; box-shadow: 0 20px 45px rgba(12, 32, 76, 0.06); }
+    h1 { font-family: 'Fraunces', serif; color: var(--navy); font-size: 2.2rem; margin-bottom: 8px; }
+    .sub { color: var(--muted); font-size: 15px; margin-bottom: 28px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+    input { width: 100%; padding: 13px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 14.5px; background: var(--ivory); }
+    input:focus { outline: none; border-color: var(--gold); background: #FFF; }
+    .items-box { background: var(--cream); border: 1px solid rgba(200, 157, 60, 0.45); border-radius: 16px; padding: 20px; margin: 22px 0; }
+    .item-row { display: grid; grid-template-columns: 36px 1fr; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .item-row:last-child { margin-bottom: 0; }
+    .tag-num { width: 32px; height: 32px; border-radius: 8px; background: var(--navy); color: var(--cream); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+    .submit-btn { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--navy); color: var(--cream); font-size: 16px; font-weight: 700; transition: transform 0.2s; }
+    .submit-btn:hover { transform: translateY(-2px); }
+    .generated-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 32px; }
+    .qr-ticket { border: 1.5px dashed var(--navy); border-radius: 16px; padding: 18px; text-align: center; background: #FFF; }
+    .qr-ticket img { width: 130px; height: 130px; margin: 10px auto; display: block; }
+    .floating-dock-wrap { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 500; }
+    .floating-dock { display: flex; gap: 4px; padding: 8px 12px; border-radius: 999px; background: rgba(12, 32, 76, 0.94); border: 1px solid rgba(230, 199, 117, 0.35); }
+    .floating-dock a { color: var(--cream); text-decoration: none; font-size: 12.5px; padding: 8px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+    .floating-dock a.active { background: rgba(255, 245, 203, 0.16); color: #E6C775; }
+    @media (max-width: 680px) { .grid-2 { grid-template-columns: 1fr; } }
+  </style>
 </head>
-<body class="bg-obsidian text-slate-100 min-h-screen flex flex-col justify-between">
-
-    <!-- Custom Cursor Tracker -->
-    <div class="cursor-dot hidden md:block" data-cursor-dot></div>
-    <div class="cursor-outline hidden md:block" data-cursor-outline></div>
-
-    <!-- Top Navigation -->
-    <nav class="w-full border-b border-white/5 bg-obsidian/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="index.html" class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <span class="font-extrabold text-lg tracking-tight text-white">Tag<span class="text-amber-400">Vault</span></span>
-            </a>
-            <div class="flex items-center space-x-6 text-xs font-semibold text-slate-400">
-                <a href="index.html" class="hover:text-amber-400 transition">Home</a>
-                <a href="item.html" class="hover:text-amber-400 transition">Test Scan</a>
-                <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">UEAB Campus Portal</span>
-            </div>
+<body>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="wrap">
+    <a href="index.html" class="back-link" data-hover><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
+    <div class="card">
+      <h1>Claim Your 5-Tag Student Pack</h1>
+      <p class="sub">One-time <strong>KSh 50</strong> activation covers 5 hybrid QR/NFC stickers for <strong>4 academic years</strong> (renewable thereafter at KSh 100/year for extended storage).</p>
+      <form id="claimForm">
+        <div class="grid-2">
+          <div><label>Student Full Name</label><input type="text" id="studentName" placeholder="e.g. Samuel Kibon" required data-hover /></div>
+          <div><label>UEAB Student Email (Masked on Scan)</label><input type="email" id="studentEmail" placeholder="skibon2711@ueab.ac.ke" required data-hover /></div>
         </div>
+        <div><label>M-Pesa Confirmation Code (KSh 50 Paybill / Till)</label><input type="text" id="mpesaRef" placeholder="e.g. TJK892LM10" required data-hover /></div>
+        <div class="items-box">
+          <label style="margin-bottom:12px;">Assign Your 5 Protected Campus Items:</label>
+          <div class="item-row"><span class="tag-num">#1</span><input type="text" class="item-input" value="Dorm Keys" required /></div>
+          <div class="item-row"><span class="tag-num">#2</span><input type="text" class="item-input" value="UEAB Student ID Card" required /></div>
+          <div class="item-row"><span class="tag-num">#3</span><input type="text" class="item-input" value="HP Laptop & Charger" required /></div>
+          <div class="item-row"><span class="tag-num">#4</span><input type="text" class="item-input" value="Scientific Calculator" required /></div>
+          <div class="item-row"><span class="tag-num">#5</span><input type="text" class="item-input" value="Core Course Textbook" required /></div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn" data-hover><i class="fa-solid fa-lock"></i> Activate 5-Tag Bundle (4-Year Coverage)</button>
+      </form>
+      <div id="resultArea" style="display:none;">
+        <div style="margin-top:28px; padding:16px; border-radius:12px; background:#ECFDF5; color:#065F46; font-size:14px; font-weight:600;" id="statusBanner"></div>
+        <div class="generated-grid" id="qrGrid"></div>
+      </div>
+    </div>
+  </div>
+  <div class="floating-dock-wrap">
+    <nav class="floating-dock">
+      <a href="index.html">Home</a>
+      <a href="claim.html" class="active">Claim</a>
+      <a href="explore.html">Explore</a>
+      <a href="recovered.html">Recovered</a>
+      <a href="item.html?tag=UEAB-8841&item=Dorm%20Keys&email=skibon2711@ueab.ac.ke">Scan</a>
+      <a href="admin.html">Admin</a>
     </nav>
+  </div>
+  <script>
+    const dot = document.getElementById('cursorDot'), ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx+'px'; dot.style.top = my+'px'; });
+    (function loop(){ rx += (mx-rx)*0.18; ry += (my-ry)*0.18; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(loop); })();
+    document.querySelectorAll('[data-hover]').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('is-hovering'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('is-hovering'));
+    });
+    document.getElementById('claimForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = "Minting 5 Encrypted Tag IDs...";
+      const email = document.getElementById('studentEmail').value.trim();
+      const items = Array.from(document.querySelectorAll('.item-input')).map(i => i.value.trim());
 
-    <!-- Main Checkout & Registration Container -->
-    <main class="max-w-4xl w-full mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+      const tags = items.map(item => {
+        const code = "UEAB-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        return {
+          tag_code: code,
+          item,
+          scan_url: `https://mugokm.github.io/baraton-digital--buildoff/item.html?tag=${code}&email=${encodeURIComponent(email)}&item=${encodeURIComponent(item)}`
+        };
+      });
 
-        <!-- Left Column: Order Summary & Pricing Tier -->
-        <div class="lg:col-span-2 glass-card p-7 rounded-3xl space-y-6">
-            <div>
-                <span class="text-[11px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">Student Starter Pack</span>
-                <h2 class="text-2xl font-extrabold mt-4">5x Waterproof QR Tags</h2>
-                <p class="text-slate-400 text-xs mt-1 leading-relaxed">Durable, weather-sealed smart stickers linked directly to your encrypted Baraton student email.</p>
-            </div>
-
-            <div class="bg-black/40 p-5 rounded-2xl border border-white/5 space-y-3 text-xs">
-                <div class="flex justify-between text-slate-300">
-                    <span>Tag Bundle (5 Stickers)</span>
-                    <span class="font-bold">KSh 50.00</span>
-                </div>
-                <div class="flex justify-between text-slate-300">
-                    <span>Zero-App Web Routing</span>
-                    <span class="text-emerald-400 font-semibold">Included</span>
-                </div>
-                <div class="flex justify-between text-slate-300">
-                    <span>Identity Privacy Shield</span>
-                    <span class="text-emerald-400 font-semibold">Active</span>
-                </div>
-                <hr class="border-white/10">
-                <div class="flex justify-between items-center text-base font-extrabold text-white pt-1">
-                    <span>Total Due</span>
-                    <span class="text-amber-400">KSh 50</span>
-                </div>
-            </div>
-
-            <div class="flex items-start space-x-3 text-[11px] text-slate-400 bg-amber-500/5 p-3.5 rounded-xl border border-amber-500/10">
-                <i class="fa-solid fa-lock text-amber-400 mt-0.5"></i>
-                <p>Your phone number is strictly used for the M-Pesa STK Push payment prompt and is <strong>never</strong> shown on your public QR recovery page.</p>
-            </div>
+      document.getElementById('statusBanner').textContent = "Bundle generated successfully! Valid for 4 Years (Renewal: KSh 100/yr after Year 4).";
+      document.getElementById('qrGrid').innerHTML = tags.map(t => `
+        <div class="qr-ticket">
+          <span style="font-size:11px; font-weight:700; color:#C89D3C;">${t.tag_code}</span>
+          <strong style="display:block; color:#0C204C; font-size:15px; margin:4px 0;">${t.item}</strong>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=0C204C&data=${encodeURIComponent(t.scan_url)}" alt="QR Code" />
+          <a href="item.html?tag=${t.tag_code}&email=${encodeURIComponent(email)}&item=${encodeURIComponent(t.item)}" target="_blank" style="font-size:12px; color:#0C204C; font-weight:600; display:inline-block; margin-top:8px;">Test Scan Link &rarr;</a>
         </div>
-
-        <!-- Right Column: Student Details + M-Pesa STK Push Form -->
-        <div class="lg:col-span-3 glass-card p-8 rounded-3xl border border-amber-500/20 shadow-2xl">
-            <div id="checkout-form-container">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h1 class="text-xl font-extrabold text-white">Register & Pay via M-Pesa</h1>
-                        <p class="text-xs text-slate-400 mt-0.5">Instant Lipa na M-Pesa Online Express Checkout</p>
-                    </div>
-                    <div class="px-3 py-1.5 rounded-xl bg-[#43B02A]/15 border border-[#43B02A]/40 text-[#43B02A] font-extrabold text-xs tracking-wide">
-                        M-PESA
-                    </div>
-                </div>
-
-                <form id="mpesaForm" onsubmit="triggerMpesaStkPush(event)" class="space-y-5 text-sm">
-                    <!-- Official UEAB Student Email -->
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">UEAB Student Email</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-envelope absolute left-4 top-3.5 text-slate-500"></i>
-                            <input type="email" id="studentEmail" required placeholder="smugmo2711@ueab.ac.ke"
-                                class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition">
-                        </div>
-                        <p id="emailError" class="text-rose-400 text-xs mt-1.5 hidden">Please enter a valid @ueab.ac.ke student email.</p>
-                    </div>
-
-                    <!-- Primary Item Category -->
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Primary Item to Protect</label>
-                        <div class="relative">
-                            <i class="fa-solid fa-tag absolute left-4 top-3.5 text-slate-500"></i>
-                            <select id="itemCategory" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white focus:outline-none focus:border-amber-500 transition appearance-none">
-                                <option value="Dorm Keys">Dorm / Hostel Keys</option>
-                                <option value="Laptop">Laptop / MacBook</option>
-                                <option value="Student ID Card">Student ID & Meal Card</option>
-                                <option value="Scientific Calculator">Scientific Calculator</option>
-                                <option value="Power Bank">Power Bank & Charger</option>
-                                <option value="Backpack">Backpack / Study Bag</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Safaricom M-Pesa Number -->
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Safaricom M-Pesa Number</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-3 text-slate-400 font-bold text-xs bg-white/5 px-2 py-0.5 rounded">+254</span>
-                            <input type="tel" id="mpesaPhone" required placeholder="712 345 678" maxlength="10"
-                                class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-20 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-[#43B02A] transition">
-                        </div>
-                    </div>
-
-                    <!-- Pay Now Button -->
-                    <button type="submit" id="payBtn" class="w-full py-4 bg-[#43B02A] hover:bg-[#389622] text-white font-extrabold rounded-xl transition shadow-lg shadow-[#43B02A]/20 flex items-center justify-center space-x-2 text-sm mt-2">
-                        <i class="fa-solid fa-mobile-screen-button text-base"></i>
-                        <span>Pay KSh 50 via M-Pesa Express</span>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Step 2: STK Push Waiting State (Hidden by default) -->
-            <div id="stk-waiting-state" class="hidden text-center py-8 space-y-5">
-                <div class="w-16 h-16 rounded-full bg-[#43B02A]/20 border border-[#43B02A]/40 text-[#43B02A] flex items-center justify-center text-2xl mx-auto animate-pulse">
-                    <i class="fa-solid fa-mobile-retro"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-extrabold text-white">Check Your Phone!</h3>
-                    <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">
-                        An M-Pesa STK Push prompt for <strong class="text-white">KSh 50</strong> has been sent to <strong id="confirm-phone-display" class="text-[#43B02A]">+2547...</strong>. Enter your M-Pesa PIN to complete registration.
-                    </p>
-                </div>
-                <div class="bg-black/40 p-3 rounded-xl border border-white/5 text-[11px] text-slate-400 max-w-xs mx-auto">
-                    <i class="fa-solid fa-spinner fa-spin text-amber-400 mr-1.5"></i> Waiting for Safaricom Daraja API callback...
-                </div>
-            </div>
-
-            <!-- Step 3: Payment Confirmed & Instant QR Code Generated -->
-            <div id="payment-success-state" class="hidden text-center py-4 space-y-5">
-                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
-                    <i class="fa-solid fa-circle-check"></i>
-                    <span>M-Pesa Receipt: <span id="mpesa-receipt">SHB89K2L9P</span> Confirmed</span>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-extrabold text-white">Your TagVault QR is Live!</h3>
-                    <p class="text-xs text-slate-400 mt-1">Scan this code right now to verify your recovery page.</p>
-                </div>
-
-                <!-- Live Rendered QR Code -->
-                <div id="generated-qr-box" class="bg-white p-4 rounded-2xl inline-block shadow-xl mx-auto"></div>
-
-                <div class="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
-                    <a id="test-live-link" href="#" target="_blank" class="px-5 py-3 bg-amber-500 text-black font-extrabold rounded-xl text-xs hover:bg-amber-400 transition">
-                        <i class="fa-solid fa-arrow-up-right-from-square mr-1.5"></i> Preview Recovery Page
-                    </a>
-                    <button onclick="resetCheckout()" class="px-5 py-3 bg-white/5 text-slate-300 font-bold rounded-xl text-xs hover:bg-white/10 transition">
-                        Register Another Tag
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-6 text-center text-xs text-slate-500">
-        TagVault Campus Asset Recovery &bull; University of Eastern Africa, Baraton
-    </footer>
-
-    <script>
-        // =========================================================================
-        // DARAJA API CONFIGURATION (Backend Endpoint URL)
-        // When you deploy your Node.js/PHP backend with Safaricom Consumer Key & Secret,
-        // replace this URL with your live server endpoint (e.g., https://api.tagvault.co.ke/stkpush)
-        // =========================================================================
-        const DARAJA_BACKEND_ENDPOINT = ""; // Leave empty to run live Hackathon Demo Mode
-
-        async function triggerMpesaStkPush(event) {
-            event.preventDefault();
-
-            const emailInput = document.getElementById('studentEmail').value.trim().toLowerCase();
-            const itemCategory = document.getElementById('itemCategory').value;
-            let rawPhone = document.getElementById('mpesaPhone').value.replace(/\s+/g, '');
-            const emailError = document.getElementById('emailError');
-
-            // 1. Validate Baraton UEAB Email
-            if (!emailInput.endsWith('@ueab.ac.ke')) {
-                emailError.classList.remove('hidden');
-                return;
-            }
-            emailError.classList.add('hidden');
-
-            // 2. Format Kenyan phone number to 2547XXXXXXXX format required by Safaricom Daraja API
-            if (rawPhone.startsWith('0')) {
-                rawPhone = '254' + rawPhone.substring(1);
-            } else if (!rawPhone.startsWith('254')) {
-                rawPhone = '254' + rawPhone;
-            }
-
-            // Switch UI to Waiting for PIN State
-            document.getElementById('checkout-form-container').classList.add('hidden');
-            document.getElementById('stk-waiting-state').classList.remove('hidden');
-            document.getElementById('confirm-phone-display').innerText = '+' + rawPhone;
-
-            // 3. Real Daraja API Call vs. Live Hackathon Demo Simulation
-            if (DARAJA_BACKEND_ENDPOINT !== "") {
-                try {
-                    const response = await fetch(DARAJA_BACKEND_ENDPOINT, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            phone: rawPhone,
-                            amount: 50,
-                            accountReference: emailInput.split('@')[0],
-                            transactionDesc: `TagVault ${itemCategory}`
-                        })
-                    });
-                    const data = await response.json();
-                    if (data.ResponseCode === "0") {
-                        completeOrderAndGenerateQR(emailInput, itemCategory, data.CheckoutRequestID);
-                    }
-                } catch (err) {
-                    alert("Network error connecting to M-Pesa gateway.");
-                    resetCheckout();
-                }
-            } else {
-                // Simulate 3.5-second STK Push PIN entry for live hackathon judging
-                setTimeout(() => {
-                    const fakeReceipt = "SHB" + Math.random().toString(36).substring(2, 9).toUpperCase();
-                    completeOrderAndGenerateQR(emailInput, itemCategory, fakeReceipt);
-                }, 3500);
-            }
-        }
-
-        function completeOrderAndGenerateQR(email, item, receiptCode) {
-            document.getElementById('stk-waiting-state').classList.add('hidden');
-            document.getElementById('payment-success-state').classList.remove('hidden');
-            document.getElementById('mpesa-receipt').innerText = receiptCode;
-
-            // Build exact dynamic URL pointing to your live item.html
-            const recoveryUrl = `https://mugokm.github.io/baraton-digital--buildoff/item.html?email=${encodeURIComponent(email)}&item=${encodeURIComponent(item)}`;
-            document.getElementById('test-live-link').href = recoveryUrl;
-
-            // Render crisp QR code immediately
-            const qrBox = document.getElementById('generated-qr-box');
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, {
-                text: recoveryUrl,
-                width: 160,
-                height: 160,
-                colorDark: "#0a0a0c",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-
-        function resetCheckout() {
-            document.getElementById('payment-success-state').classList.add('hidden');
-            document.getElementById('stk-waiting-state').classList.add('hidden');
-            document.getElementById('checkout-form-container').classList.remove('hidden');
-            document.getElementById('mpesaForm').reset();
-        }
-
-        // Custom Cursor Tracker
-        const cursorDot = document.querySelector('[data-cursor-dot]');
-        const cursorOutline = document.querySelector('[data-cursor-outline]');
-        window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = `${e.clientX}px`;
-            cursorDot.style.top = `${e.clientY}px`;
-            cursorOutline.animate({ left: `${e.clientX}px`, top: `${e.clientY}px` }, { duration: 400, fill: "forwards" });
-        });
-    </script>
+      `).join('');
+      document.getElementById('resultArea').style.display = 'block';
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Bundle Activated';
+    });
+  </script>
 </body>
 </html>
